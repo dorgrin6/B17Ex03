@@ -10,7 +10,7 @@
 
         protected float m_EneregyPercentageLeft;
 
-        //protected Engine m_Engine;
+        protected Engine m_Engine;
 
         // TODO: should m_EneregyPercentageLeft be also/just in Engine??
 
@@ -47,7 +47,35 @@
             }
         }
 
-        protected Vehicle(string i_ModelName, string i_RegistrationNum, float i_EneregyPercentageLeft, ushort i_WheelsAmount, Engine.eEngineType i_EngineType)
+        public abstract class Engine
+        {
+        }
+
+        public class GasEngine :Engine
+        {
+            public enum eTypeOfFuel
+            {
+                Octan95,
+                Octan96,
+                Octan98
+            }
+
+            eTypeOfFuel m_fuelType;
+            float m_currentFuelAmount;
+            float m_maxFuelAmount;
+
+            public GasEngine(eTypeOfFuel i_FuelType, float i_MaxFuelAmount)
+            {
+                m_fuelType = i_FuelType;
+                m_maxFuelAmount = i_MaxFuelAmount;
+            }
+
+            //we need a method for refueling
+        }
+
+        
+
+        public Vehicle(string i_ModelName, string i_RegistrationNum, float i_EneregyPercentageLeft, ushort i_WheelsAmount, Engine.eEngineType i_EngineType)
         {
             // TODO: input validation
             m_ModelName = i_ModelName;
@@ -67,6 +95,13 @@
             {
                 // TODO: exception
             }*/
+        }
+
+        public Vehicle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
+        {
+            m_Wheels = new List<Wheel>(i_NumberOfWheels);
+            //foreach wheel set maxAirPressure or during the constructor
+            m_Engine = i_Engine;
         }
     }
 }
