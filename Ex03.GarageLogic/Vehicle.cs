@@ -10,7 +10,7 @@
 
         protected float m_EneregyPercentageLeft;
 
-        //protected Engine m_Engine;
+        protected Engine m_Engine;
 
         // TODO: should m_EneregyPercentageLeft be also/just in Engine??
 

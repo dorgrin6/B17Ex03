@@ -46,6 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ElectricEngine.cs" />
+    <Compile Include="Engine.cs" />
+    <Compile Include="GasEngine.cs" />
     <Compile Include="Motorcycle.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
