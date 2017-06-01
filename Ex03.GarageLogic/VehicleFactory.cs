@@ -20,6 +20,7 @@
             {
                 case eTypeOfVehicle.GasCar:
                     vehicle = new Car(4, 30, new Vehicle(Vehicle.GasEngine.eTypeOfFuel.Octan98, 42)); //get as parameters: number of wheels 4, maxAirPresuure 30, GasEngine(Octan98, max 42 fuel)
+                    ((Car)vehicle)
                     break;
                 case eTypeOfVehicle.ElectricCar:
                     vehicle = new Car(); //get as parameters: number of wheels 4, maxAirPresuure 30, ElectricEngine(max 2.5 hours)
