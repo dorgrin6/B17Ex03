@@ -1,5 +1,6 @@
 ﻿namespace Ex03.GarageLogic
 {
+    using System;
     using System.Collections.Generic;
     using System.Text;
 
@@ -41,7 +42,7 @@
                 }
                 else
                 {
-                    // TODO: throw ValueOutOfRangeException 
+                    throw new ValueOutOfRangeException();
                 }
             }
         }
