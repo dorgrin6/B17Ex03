@@ -1,23 +1,16 @@
 ﻿namespace Ex03.GarageLogic
 {
-    public class ElectricEngine : Engine
+    public class ElectricEngine : Vehicle.Engine
     {
-
-        public ElectricEngine() : base(i_EngineType)
+        public ElectricEngine(float i_MaxEnergy, float i_CurrentEnergy) : base(i_MaxEnergy, i_CurrentEnergy)
         {
-            
-        }
-
-        public override void RenewEnergy(float i_Amount)
-        {
-            Charge(i_Amount);
         }
 
         private void Charge(float i_ChargeAmount)
         {
-            if (m_BatteryLeft + i_ChargeAmount <= m_MaxBatteryLife)
+            if (m_CurrentEnergy + i_ChargeAmount <= m_MaxEnergy)
             {
-                m_BatteryLeft += i_ChargeAmount;
+                this.m_CurrentEnergy += i_ChargeAmount;
             }
 
             else

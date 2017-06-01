@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
 
     public class VehicleFactory
@@ -25,7 +19,7 @@ namespace Ex03.GarageLogic
             switch (i_vehicleType)
             {
                 case eTypeOfVehicle.GasCar:
-                    vehicle = new Car(4, 30, new Vehicle.GasEngine(Vehicle.GasEngine.eTypeOfFuel.Octan98, 42)); //get as parameters: number of wheels 4, maxAirPresuure 30, GasEngine(Octan98, max 42 fuel)
+                    vehicle = new Car(4, 30, new Vehicle(Vehicle.GasEngine.eTypeOfFuel.Octan98, 42)); //get as parameters: number of wheels 4, maxAirPresuure 30, GasEngine(Octan98, max 42 fuel)
                     break;
                 case eTypeOfVehicle.ElectricCar:
                     vehicle = new Car(); //get as parameters: number of wheels 4, maxAirPresuure 30, ElectricEngine(max 2.5 hours)
@@ -40,8 +34,10 @@ namespace Ex03.GarageLogic
                     vehicle = new Truck(); //get as parameters: number of wheels 12, maxAirPressure 32, GasEngine(Octan96, max 135 fuel)
                     break;
                 default:
+                    // throw notSupportedException
                     break;
             }
+
             return vehicle;
         }
     }

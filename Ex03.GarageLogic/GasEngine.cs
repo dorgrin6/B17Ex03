@@ -1,33 +1,20 @@
 ﻿namespace Ex03.GarageLogic
 {
-    public class GasEngine : Engine
+    public class GasEngine : Vehicle.Engine
     {
         private eFuelType m_FuelType;
 
-        public GasEngine(float i_CurrentFuelLevel)
-            : base(eEngineType.Gas)
+        public GasEngine(float i_MaxEnergy, float i_CurrentEnergy, eFuelType i_FuelType) : base(i_MaxEnergy, i_CurrentEnergy)
         {
-            m_CurrentFuelLevel = i_CurrentFuelLevel;
-
+            this.m_FuelType = i_FuelType;
         }
 
-        enum eFuelType
+        public enum eFuelType
         {
             Soler,
             Octan95,
             Octan96,
             Octan98
-        }
-
-        public override void RenewEnergy(float i_Amount)
-        {
-            refuel(i_Amount);
-        }
-
-
-        private refuel(float i_Amount)
-        {
-            
         }
     }
 }
