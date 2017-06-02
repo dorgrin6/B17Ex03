@@ -11,7 +11,6 @@ namespace Ex03.GarageLogic
         {
             m_MinValue = i_MinValue;
             m_MaxValue = i_MaxValue;
-            // this exception should be caught by UI
         }
     }
 }

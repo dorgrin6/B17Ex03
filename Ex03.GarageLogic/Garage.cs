@@ -13,15 +13,20 @@ namespace Ex03.GarageLogic
             Paid
         }
 
+        public string[] GetGarageVehicleStatus()
+        {
+            return new string[] { "In repair", "Repaired", "Paid" };
+        }
+
         public class VehicleInGarage
         {
-            public string m_OwnerName;
+            private string m_OwnerName;
 
-            public string m_OwnerPhoneNumber;
+            private string m_OwnerPhoneNumber;
 
-            public eVehicleStatus m_VehicleStatus;
+            private eVehicleStatus m_VehicleStatus;
 
-            public Vehicle m_Vehicle;
+            private Vehicle m_Vehicle;
 
             public VehicleInGarage(string i_OwnerName, string i_PhoneNum, Vehicle i_Vehicle)
             {
@@ -30,45 +35,68 @@ namespace Ex03.GarageLogic
                 this.m_Vehicle = i_Vehicle;
                 this.m_VehicleStatus = eVehicleStatus.InRepair;
             }
+
+            public eVehicleStatus VehicleStatus
+            {
+                get
+                {
+                    return m_VehicleStatus;
+                }
+
+                set
+                {
+                    m_VehicleStatus = value;
+                }
+            }
         }
 
         public void InsertVehicle(string i_RegistrationNumber, string i_OwnerName, string i_PhoneNumber, string i_VehicleType)
         {
             VehicleInGarage vehicleInGarage;
-            try
+            if (this.TryFindVehicleByRegistration(i_RegistrationNumber, out vehicleInGarage))
             {
-                if (!isVehicleExist(i_RegistrationNumber))
-                {
-                    throw new ArgumentException(
-                        string.Format("Vehicle with registration #{0} already exists", i_RegistrationNumber),
-                        i_RegistrationNumber);
-                }
-
-                // vehicle not found, create new one
-                Vehicle newVehicle;
-                if (!VehicleFactory.TryGetVehicle(i_VehicleType, out newVehicle))
-                {
-                    // should we use this exception?
-                    throw new ValueOutOfRangeException(
-                        (float)VehicleFactory.eVehicleType.LowerBound,
-                        (float)VehicleFactory.eVehicleType.UpperBound,
-                        string.Format("Vehicle type {0} doesn't exist", i_VehicleType));
-                }
-
-                vehicleInGarage = new Garage.VehicleInGarage(i_OwnerName, i_PhoneNumber, newVehicle);
-                m_Vehicles.Add(i_RegistrationNumber, vehicleInGarage);
+                vehicleInGarage.VehicleStatus = eVehicleStatus.InRepair;
+                throw new ArgumentException("vehicleExists");
             }
-            catch (ArgumentException i_Except)
+            // vehicle not found, create new one
+            Vehicle newVehicle;
+            if (!VehicleFactory.TryGetNewVehicle((VehicleFactory.eVehicleType)ushort.Parse(i_VehicleType), out newVehicle))
             {
-                // assuming vehicleInGarage was found
-                vehicleInGarage = m_Vehicles[i_RegistrationNumber];
-                vehicleInGarage.m_VehicleStatus = Garage.eVehicleStatus.InRepair;
+                // should we use this exception?
+                throw new ArgumentException("VechicleTypeNotExists", i_VehicleType);
             }
+
+            vehicleInGarage = new VehicleInGarage(i_OwnerName, i_PhoneNumber, newVehicle);
+            m_Vehicles.Add(i_RegistrationNumber, vehicleInGarage);
         }
 
-        private bool isVehicleExist(string i_RegistrationNum)
+        public bool TryFindVehicleByRegistration(string i_RegistrationNum, out VehicleInGarage vehicle)
         {
-            return m_Vehicles.ContainsKey(i_RegistrationNum);
+            bool result = false;
+            vehicle = null;
+
+            if (m_Vehicles.TryGetValue(i_RegistrationNum, out vehicle))
+            {
+                result = true;
+            }
+
+            return result;
+        }
+
+        public List<string> GetRegistrationNums(bool filterByStatus, eVehicleStatus status)
+        {
+            List<string> result = new List<string>();
+
+            foreach (KeyValuePair<string, VehicleInGarage> pair in this.m_Vehicles)
+            {
+                VehicleInGarage currentVehicle = pair.Value;
+                if (!filterByStatus || currentVehicle.VehicleStatus == status)
+                {
+                    result.Add(pair.Key);
+                }
+            }
+
+            return result;
         }
     }
 }

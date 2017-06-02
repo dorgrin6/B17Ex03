@@ -1,18 +1,24 @@
 ﻿namespace Ex03.GarageLogic
 {
     using System;
+    using System.Collections.Generic;
 
     public class VehicleFactory
     {
         public enum eVehicleType
         {
-            LowerBound,
+            LowerBound = 0,
             GasMotorcycle,
             ElectricMotorcycle,
             GasCar,
             ElectricCar,
             Truck,
             UpperBound
+        }
+
+        public static string[] GetVehicleNames()
+        {
+            return new string[] { "Gas motorcycle", "Electric motorcycle", "Gas car", "Electric car", "Truck" };
         }
 
         public static Vehicle GetVehicle(eVehicleType i_VehicleType)
@@ -38,22 +44,21 @@
                     vehicle = new Truck(12, 42, new GasEngine(GasEngine.eFuelType.Octan96, 135));
                     break;
                 default:
-                    throw new ArgumentException(string.Format("Vehicle {0} isn't supported!", i_VehicleType.ToString()));
+                    throw new ArgumentException(string.Format("Vehicle {0} isn't supported!", i_VehicleType));
             }
 
             return vehicle;
         }
 
-        public static bool TryGetVehicle(string i_VehicleType, out Vehicle i_Vehicle)
+        public static bool TryGetNewVehicle(eVehicleType i_VehicleType, out Vehicle i_Vehicle)
         {
             i_Vehicle = null;
             bool result = false;
 
-            // run on all eVehicleTyoe and check for value
+            // run on all eVehicleType and check for value
             foreach (eVehicleType type in Enum.GetValues(typeof(eVehicleType)))
             {
-                // TODO: should the cast to enum be done outside this method?
-                if (type.ToString() == i_VehicleType)
+                if (type == i_VehicleType)
                 {
                     i_Vehicle = GetVehicle(type);
                     result = true;

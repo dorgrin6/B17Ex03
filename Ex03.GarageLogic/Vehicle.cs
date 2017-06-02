@@ -80,6 +80,5 @@
 
             m_Engine = i_Engine;
         }
-
     }
 }
