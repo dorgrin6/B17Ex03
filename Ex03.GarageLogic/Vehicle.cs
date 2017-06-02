@@ -42,7 +42,7 @@
                 }
                 else
                 {
-                    throw new ValueOutOfRangeException();
+                    //throw new ValueOutOfRangeException();
                 }
             }
         }
@@ -58,26 +58,27 @@
                 Electric,
                 Gas
             }
+
+            protected Engine(float i_MaxEnergy) // this is in case we dont want to init current energy
+            {
+                m_MaxEnergy = i_MaxEnergy;
+                m_CurrentEnergy = i_MaxEnergy;
+            }
+
+            /*
             protected Engine(float i_MaxEnergy, float i_CurrentEnergy)
             {
                 m_MaxEnergy = i_MaxEnergy;
                 m_CurrentEnergy = i_CurrentEnergy;
-            }
+            }*/
         }
 
-        public Vehicle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine.eEngineType i_EngineType)
+        public Vehicle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
         {
             m_Wheels = new List<Wheel>(i_NumberOfWheels);
             //foreach wheel set maxAirPressure or during the constructor
 
-            if (i_EngineType == Engine.eEngineType.Electric)
-            {
-                this.m_Engine = new ElectricEngine();
-            }
-            else if (i_EngineType == Engine.eEngineType.Gas)
-            {
-                this.m_Engine = new GasEngine();
-            }
+            m_Engine = i_Engine;
         }
 
     }

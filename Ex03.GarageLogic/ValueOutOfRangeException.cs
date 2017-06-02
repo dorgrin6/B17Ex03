@@ -9,10 +9,9 @@ namespace Ex03.GarageLogic
 
         public ValueOutOfRangeException(float i_MinValue,float i_MaxValue, string i_Message) : base(i_Message)
         {
-            this.m_MinValue = i_MinValue;
-            this.m_MaxValue = i_MaxValue;
-            // TODO: should we print here
-            //Console.WriteLine("Given value should be in range [{0},{1}]",this.m_MinValue,this.m_MaxValue);
+            m_MinValue = i_MinValue;
+            m_MaxValue = i_MaxValue;
+            // this exception should be caught by UI
         }
     }
 }

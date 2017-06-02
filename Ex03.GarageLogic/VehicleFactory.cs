@@ -1,45 +1,67 @@
 ﻿namespace Ex03.GarageLogic
 {
+    using System;
 
     public class VehicleFactory
     {
-        public enum eTypeOfVehicle
+        public enum eVehicleType
         {
-            GasCar,
-            ElectricCar,
+            LowerBound,
             GasMotorcycle,
             ElectricMotorcycle,
-            Truck
+            GasCar,
+            ElectricCar,
+            Truck,
+            UpperBound
         }
 
-        public Vehicle GetVehicle(eTypeOfVehicle i_vehicleType)
+        public static Vehicle GetVehicle(eVehicleType i_VehicleType)
         {
             Vehicle vehicle = null;
             
-            switch (i_vehicleType)
+            switch (i_VehicleType)
             {
-                case eTypeOfVehicle.GasCar:
-                    vehicle = new Car(4, 30, new Vehicle(Vehicle.GasEngine.eTypeOfFuel.Octan98, 42)); //get as parameters: number of wheels 4, maxAirPresuure 30, GasEngine(Octan98, max 42 fuel)
-                    ((Car)vehicle)
+                case eVehicleType.GasMotorcycle:
+                    vehicle = new Motorcycle(2, 33, new GasEngine(GasEngine.eFuelType.Octan95, 5.5f));
                     break;
-                case eTypeOfVehicle.ElectricCar:
-                    vehicle = new Car(); //get as parameters: number of wheels 4, maxAirPresuure 30, ElectricEngine(max 2.5 hours)
+                case eVehicleType.ElectricMotorcycle:
+                    vehicle = new Motorcycle(2, 33, new ElectricEngine(2.7f));
                     break;
-                case eTypeOfVehicle.GasMotorcycle:
-                    vehicle = new Motorcycle(); //get as parameters: number of wheels 2, maxAirPressure 33, GasEngine(Octan95, max 5.5 fuel)
+                case eVehicleType.GasCar:
+                    vehicle = new Car(4, 30, new GasEngine(GasEngine.eFuelType.Octan98, 42));
                     break;
-                case eTypeOfVehicle.ElectricMotorcycle:
-                    vehicle = new Motorcycle(); //get as parameters: number of wheels 2, maxAirPressure 33, ElectricEngine(max 2.7 hours)
+                case eVehicleType.ElectricCar:
+                    vehicle = new Car(4, 30, new ElectricEngine(2.5f));
                     break;
-                case eTypeOfVehicle.Truck:
-                    vehicle = new Truck(); //get as parameters: number of wheels 12, maxAirPressure 32, GasEngine(Octan96, max 135 fuel)
+
+                case eVehicleType.Truck:
+                    vehicle = new Truck(12, 42, new GasEngine(GasEngine.eFuelType.Octan96, 135));
                     break;
                 default:
-                    // throw notSupportedException
-                    break;
+                    throw new ArgumentException(string.Format("Vehicle {0} isn't supported!", i_VehicleType.ToString()));
             }
 
             return vehicle;
+        }
+
+        public static bool TryGetVehicle(string i_VehicleType, out Vehicle i_Vehicle)
+        {
+            i_Vehicle = null;
+            bool result = false;
+
+            // run on all eVehicleTyoe and check for value
+            foreach (eVehicleType type in Enum.GetValues(typeof(eVehicleType)))
+            {
+                // TODO: should the cast to enum be done outside this method?
+                if (type.ToString() == i_VehicleType)
+                {
+                    i_Vehicle = GetVehicle(type);
+                    result = true;
+                    break;
+                }
+            }
+
+            return result;
         }
     }
 }

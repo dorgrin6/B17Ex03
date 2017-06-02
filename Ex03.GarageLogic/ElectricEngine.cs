@@ -2,7 +2,7 @@
 {
     public class ElectricEngine : Vehicle.Engine
     {
-        public ElectricEngine(float i_MaxEnergy, float i_CurrentEnergy) : base(i_MaxEnergy, i_CurrentEnergy)
+        public ElectricEngine(float i_MaxEnergy) : base(i_MaxEnergy)
         {
         }
 
@@ -10,7 +10,7 @@
         {
             if (m_CurrentEnergy + i_ChargeAmount <= m_MaxEnergy)
             {
-                this.m_CurrentEnergy += i_ChargeAmount;
+                m_CurrentEnergy += i_ChargeAmount;
             }
 
             else
