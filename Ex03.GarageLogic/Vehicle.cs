@@ -59,10 +59,10 @@
                 Gas
             }
 
-            protected Engine(float i_MaxEnergy) // this is in case we dont want to init current energy
+            protected Engine(float i_MaxEnergy)
             {
-                m_MaxEnergy = i_MaxEnergy;
-                m_CurrentEnergy = i_MaxEnergy;
+                this.m_MaxEnergy = i_MaxEnergy;
+                this.m_CurrentEnergy = i_MaxEnergy;
             }
 
             /*
@@ -71,14 +71,63 @@
                 m_MaxEnergy = i_MaxEnergy;
                 m_CurrentEnergy = i_CurrentEnergy;
             }*/
+
+            public override string ToString()
+            {
+                string result = string.Empty;
+                if (this is ElectricEngine)
+                {
+                    result = "Electric";
+                }
+                else
+                {
+                    if (this is GasEngine)
+                    {
+                        result = "Gas";
+                    }
+                }
+
+                return result;
+            }
         }
 
         public Vehicle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
         {
             m_Wheels = new List<Wheel>(i_NumberOfWheels);
-            //foreach wheel set maxAirPressure or during the constructor
+            // foreach wheel set maxAirPressure or during the constructor
 
             m_Engine = i_Engine;
+        }
+
+        protected void setterRangeCheck(int i_Value, int i_MinVal, int i_MaxVal, string i_Name)
+        {
+            if (i_Value > i_MaxVal || i_Value < i_MinVal)
+            {
+                throw new ValueOutOfRangeException(i_MinVal, i_MaxVal, i_Name);
+            }
+        }
+
+        public abstract List<string> GetAdditionalPropertiesNames();
+
+        public override int GetHashCode()
+        {
+            return int.Parse(this.m_RegistrationNum);
+        }
+
+        public override bool Equals(object i_Other)
+        {
+            bool result;
+
+            if (!(i_Other is Vehicle))
+            {
+                result = false;
+            }
+            else
+            {
+                result = (i_Other as Vehicle).m_RegistrationNum == this.m_RegistrationNum;
+            }
+
+            return result;
         }
     }
 }

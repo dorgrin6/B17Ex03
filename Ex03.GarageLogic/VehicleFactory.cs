@@ -16,9 +16,9 @@
             UpperBound
         }
 
-        public static string[] GetVehicleNames()
+        public static List<string> GetVehicleNames()
         {
-            return new string[] { "Gas motorcycle", "Electric motorcycle", "Gas car", "Electric car", "Truck" };
+            return new List<string>() { "Gas motorcycle", "Electric motorcycle", "Gas car", "Electric car", "Truck" };
         }
 
         public static Vehicle GetVehicle(eVehicleType i_VehicleType)

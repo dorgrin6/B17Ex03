@@ -15,7 +15,8 @@ namespace Ex03.ConsoleUI
             MainMenu,
             VehicleType,
             RegistrationScreen,
-            ChangeVehicleStatusScreen
+            ChangeVehicleStatusScreen,
+            Blank
         }
 
         public enum eMenuOptions
@@ -50,35 +51,93 @@ namespace Ex03.ConsoleUI
             while (true);
         }
 
-        private void insertVehicle()
+        private void insertVehicleToGarage()
         {
             Console.WriteLine(
 @"Please insert the following in respective order:
-Registration number, owner's name, owner's phone number");
+Registration number, owner's name, owner's phone number.");
             string regisrationNum = Console.ReadLine();
             string ownerName = Console.ReadLine();
             string ownerPhoneNum = Console.ReadLine();
+            
+            string message = "Please choose the vehicle's type:";
+            Console.WriteLine(message);
+            List<string> vehicleNames = VehicleFactory.GetVehicleNames(); // get names from factory
 
-            StringBuilder typeMessage = new StringBuilder("Please choose the vehicle's type:");
-            string[] vehicleNames = VehicleFactory.GetVehicleNames(); // get names from factory
+            Console.WriteLine(createEnumaration(vehicleNames));
+            string input = getUserInput(eInputValidation.VehicleType, message);
 
-            for (int i = 0; i < vehicleNames.Length; i++)
-            {
-                typeMessage.AppendFormat("{0}) {1} {2}", i + 1, vehicleNames[i], Environment.NewLine);
-            }
 
-            string input = getUserInput(eInputValidation.VehicleType, typeMessage.ToString());
 
             Vehicle toInsert = VehicleFactory.GetVehicle((VehicleFactory.eVehicleType)ushort.Parse(input));
-            Type vehicleType = toInsert.GetType();
+            this.setAdditionalProperties(toInsert);
 
-            foreach (MemberInfo memberInfo in toInsert.GetType().GetMembers())
+
+            // TODO: ask for properties and insert them
+            //m_Garage.InsertVehicle(regisrationNum, ownerName, ownerPhoneNum, );
+        }
+
+        private void setAdditionalProperties(Vehicle i_Vehicle)
+        {
+            PropertyInfo[] info = i_Vehicle.GetType().GetProperties();
+
+            foreach (PropertyInfo prop in info)
             {
-                Console.WriteLine("Please insert {0}", memberInfo.Name);
-                string newInput = Console.ReadLine();
-                
+                bool validInput;
+                do
+                {
+                    Console.WriteLine(string.Format("Please insert {0}:", prop.Name));
+                    string input = Console.ReadLine();
+                    int inputNum;
+                    
+                    validInput = true;
+                    try
+                    {
+                        if (int.TryParse(input, out inputNum))
+                        {
+                            prop.SetValue(i_Vehicle, inputNum, null);
+                        }
+                        else
+                        {
+                            validInput = false;
+                        }
+                    }
+                    catch (ValueOutOfRangeException i_Except)
+                    {
+                        validInput = false;
+                        Console.WriteLine(
+                            "Wrong input. Please insert values in range({0}-{1})",
+                            i_Except.minValue,
+                            i_Except.maxValue);
+                    }
+                    catch (FormatException i_Except)
+                    {
+                        validInput = false;
+                        Console.WriteLine("Wrong input format");
+                    }
+                }
+                while (!validInput);
             }
-            //m_Garage.InsertVehicle(regisrationNum, ownerName, ownerPhoneNum, vehicleType);
+        }
+
+
+        private string createEnumaration(List<string> i_Enumarte)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            int index = 1;
+            foreach (string str in i_Enumarte)
+            {
+                builder.AppendFormat("{0}) {1} ", index, str);
+                if (index != i_Enumarte.Count)
+                {
+                    builder.AppendLine();
+                }
+
+                ++index;
+            }
+
+            return builder.ToString();
         }
 
         private void handleMainInput(eMenuOptions userChoice)
@@ -86,7 +145,7 @@ Registration number, owner's name, owner's phone number");
             switch (userChoice)
             {
                 case eMenuOptions.InsertToGarage:
-                    this.insertVehicle();
+                    this.insertVehicleToGarage();
                     break;
                 case eMenuOptions.ShowRegistrationNums:
                     showRegistrationNums();
@@ -188,6 +247,7 @@ Registration number, owner's name, owner's phone number");
         {
             string userInput;
             bool isLegalInput = false;
+            ushort input;
 
             do
             {
@@ -197,6 +257,9 @@ Registration number, owner's name, owner's phone number");
                 // check input by kind
                 switch (i_InputKind)
                 {
+                    case eInputValidation.Blank:
+                        isLegalInput = ushort.TryParse(userInput, out input);
+                        break;
                     case eInputValidation.MainMenu:
                         isLegalInput = isValidMenuInput(userInput);
                         break;
@@ -204,7 +267,7 @@ Registration number, owner's name, owner's phone number");
                         isLegalInput = isValidRegistrationInput(userInput);
                         break;
                     case eInputValidation.VehicleType:
-                        isLegalInput = isValidVehicleType(i_UserMessage);
+                        isLegalInput = isValidVehicleType(userInput);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(i_InputKind), i_InputKind, null);
