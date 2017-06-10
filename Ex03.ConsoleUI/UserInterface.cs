@@ -100,8 +100,16 @@ Registration number, owner's name, owner's phone number.");
 
             foreach (var tup in i_Vehicle.GetProperties())
             {
+                Vehicle.eProperty result;
                 Console.WriteLine("Please insert {0}", tup.Key);
+                Console.WriteLine(EnumService.GetAllItems<Vehicle.eProperty>(""));
+                
                 string input = Console.ReadLine();
+
+                if (Enum.TryParse(input, out result) && Enum.IsDefined(typeof(Vehicle.eProperty), result))
+                {
+                    Console.WriteLine("Success!");
+                }
             }
             
             /*
