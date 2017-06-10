@@ -3,6 +3,7 @@ using Ex03.GarageLogic;
 namespace Ex03.ConsoleUI
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using System.Security.Policy;
     using System.Text;
@@ -96,6 +97,14 @@ Registration number, owner's name, owner's phone number.");
 
         private void setAdditionalProperties(Vehicle i_Vehicle)
         {
+
+            foreach (var tup in i_Vehicle.GetProperties())
+            {
+                Console.WriteLine("Please insert {0}", tup.Key);
+                string input = Console.ReadLine();
+            }
+            
+            /*
             PropertyInfo[] info = i_Vehicle.GetType().GetProperties();
 
 
@@ -104,7 +113,7 @@ Registration number, owner's name, owner's phone number.");
             foreach (PropertyInfo prop in info)
             {
                 //Console.WriteLine((prop.GetValue(i_Vehicle) as PropertyHolder).Name);
-
+                
                 if ((prop.GetValue(i_Vehicle) as PropertyHolder).ValueType == typeof(Enum))
                 {
                     Type zzz = (prop.GetValue(i_Vehicle)).GetType();

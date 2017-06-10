@@ -6,6 +6,51 @@
 
     public abstract class Vehicle
     {
+        private readonly string[] m_Names = new string[] { "model name", "registration number", "current energy", "engine" };
+
+        public enum eProperty
+        {
+            eModelName,
+            eRegistrationNum,
+            eCurrentEnergyPercentage,
+            eEngine
+        }
+
+        private ushort m_PropertyIndex = 0;
+
+        public void SetProperty(eProperty i_Property, string i_Value)
+        {
+            switch (i_Property)
+            {
+               case eProperty.eCurrentEnergyPercentage:
+                    // check valid
+                    m_EneregyPercentageLeft = float.Parse(i_Value);
+                    break;
+                case eProperty.eRegistrationNum:
+                    break;
+                case eProperty.eModelName:
+                    break;
+                case eProperty.eEngine:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(i_Property), i_Property, null);
+            }
+        }
+
+        public Dictionary<string, eProperty> GetProperties()
+        {
+            Dictionary<string, eProperty> result = new Dictionary<string, eProperty>();
+
+            int index = 0;
+            foreach (eProperty prop in Enum.GetValues(typeof(eProperty)))
+            {
+                result.Add(m_Names[index], prop);
+                ++index;
+            }
+
+            return result;
+        }
+
         protected readonly string m_ModelName;
 
         protected readonly string m_RegistrationNum;
