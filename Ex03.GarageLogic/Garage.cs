@@ -30,10 +30,10 @@ namespace Ex03.GarageLogic
 
             public VehicleInGarage(string i_OwnerName, string i_PhoneNum, Vehicle i_Vehicle)
             {
-                this.m_OwnerName = i_OwnerName;
-                this.m_OwnerPhoneNumber = i_PhoneNum;
-                this.m_Vehicle = i_Vehicle;
-                this.m_VehicleStatus = eVehicleStatus.InRepair;
+                m_OwnerName = i_OwnerName;
+                m_OwnerPhoneNumber = i_PhoneNum;
+                m_Vehicle = i_Vehicle;
+                m_VehicleStatus = eVehicleStatus.InRepair;
             }
 
             public eVehicleStatus VehicleStatus
@@ -53,7 +53,7 @@ namespace Ex03.GarageLogic
         public void InsertVehicle(string i_RegistrationNumber, string i_OwnerName, string i_PhoneNumber, string i_VehicleType)
         {
             VehicleInGarage vehicleInGarage;
-            if (this.TryFindVehicleByRegistration(i_RegistrationNumber, out vehicleInGarage))
+            if (TryFindVehicleByRegistration(i_RegistrationNumber, out vehicleInGarage))
             {
                 vehicleInGarage.VehicleStatus = eVehicleStatus.InRepair;
                 throw new ArgumentException("vehicleExists");
@@ -87,7 +87,7 @@ namespace Ex03.GarageLogic
         {
             List<string> result = new List<string>();
 
-            foreach (KeyValuePair<string, VehicleInGarage> pair in this.m_Vehicles)
+            foreach (KeyValuePair<string, VehicleInGarage> pair in m_Vehicles)
             {
                 VehicleInGarage currentVehicle = pair.Value;
                 if (!filterByStatus || currentVehicle.VehicleStatus == status)

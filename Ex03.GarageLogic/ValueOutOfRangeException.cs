@@ -11,7 +11,7 @@ namespace Ex03.GarageLogic
         {
             get
             {
-                return this.m_MinValue;
+                return m_MinValue;
             }
         }
 
@@ -19,7 +19,7 @@ namespace Ex03.GarageLogic
         {
             get
             {
-                return this.m_MaxValue;
+                return m_MaxValue;
             }
         }
 

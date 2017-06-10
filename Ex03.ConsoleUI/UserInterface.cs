@@ -4,6 +4,7 @@ namespace Ex03.ConsoleUI
 {
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Security.Policy;
     using System.Text;
 
     public class UserInterface
@@ -64,21 +65,88 @@ Registration number, owner's name, owner's phone number.");
             Console.WriteLine(message);
             List<string> vehicleNames = VehicleFactory.GetVehicleNames(); // get names from factory
 
-            Console.WriteLine(createEnumaration(vehicleNames));
+            //Console.WriteLine(createEnumaration(vehicleNames));
             string input = getUserInput(eInputValidation.VehicleType, message);
 
 
 
             Vehicle toInsert = VehicleFactory.GetVehicle((VehicleFactory.eVehicleType)ushort.Parse(input));
-            this.setAdditionalProperties(toInsert);
+            setAdditionalProperties(toInsert);
 
 
             // TODO: ask for properties and insert them
             //m_Garage.InsertVehicle(regisrationNum, ownerName, ownerPhoneNum, );
         }
 
+/*        private void setBasicProperties(Vehicle i_Vehicle)
+        {
+            string wheelManufacturer;
+            float currentAirPressure;
+
+            Console.WriteLine("Please enter the model name:");
+            i_Vehicle.ModelName = Console.ReadLine();
+            Console.WriteLine("Please enter the wheel's manufacturer:");
+            wheelManufacturer = Console.ReadLine();
+            Console.WriteLine("Please enter the wheel's current air pressure:");
+             
+           
+
+        }*/
+
+
         private void setAdditionalProperties(Vehicle i_Vehicle)
         {
+            PropertyInfo[] info = i_Vehicle.GetType().GetProperties();
+
+
+
+
+            foreach (PropertyInfo prop in info)
+            {
+                //Console.WriteLine((prop.GetValue(i_Vehicle) as PropertyHolder).Name);
+
+                if ((prop.GetValue(i_Vehicle) as PropertyHolder).ValueType == typeof(Enum))
+                {
+                    Type zzz = (prop.GetValue(i_Vehicle)).GetType();
+                    Console.WriteLine(createEnumaration(zzz.GetEnumNames()));
+                }
+
+                //if ((prop.GetValue(i_Vehicle) as PropertyHolder).ValueType.IsEnum)
+                //{
+
+                //Type zachi = (prop.GetValue(i_Vehicle) as PropertyHolder).ValueType;
+
+                //Type zachi = (prop.GetValue(i_Vehicle) as PropertyHolder<Enum>).ValueType;
+
+                // Console.WriteLine(createEnumaration(zachi.GetEnumNames()));
+                //                    
+                //
+                //
+                //                    foreach (var enums in zachi.GetEnumValues())
+                //                    {
+                //                        Console.WriteLine(enums);
+                //                    }
+                //                   
+
+
+            
+
+
+//                Type typ = prop.GetValue(i_Vehicle)
+//                    
+//                    .GetType();
+//                {
+//                    
+//                }
+//
+//                Type propertyType = prop.GetValue(i_Vehicle).GetType();
+
+                //bool check = Enum.IsDefined(propertyType, 5);
+
+                //object deff = prop.PropertyType;
+            }
+
+            /*
             PropertyInfo[] info = i_Vehicle.GetType().GetProperties();
 
             foreach (PropertyInfo prop in info)
@@ -118,10 +186,11 @@ Registration number, owner's name, owner's phone number.");
                 }
                 while (!validInput);
             }
+            */
         }
 
 
-        private string createEnumaration(List<string> i_Enumarte)
+        private string createEnumaration(string[] i_Enumarte)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -129,7 +198,7 @@ Registration number, owner's name, owner's phone number.");
             foreach (string str in i_Enumarte)
             {
                 builder.AppendFormat("{0}) {1} ", index, str);
-                if (index != i_Enumarte.Count)
+                if (index != i_Enumarte.Length)
                 {
                     builder.AppendLine();
                 }
@@ -145,13 +214,13 @@ Registration number, owner's name, owner's phone number.");
             switch (userChoice)
             {
                 case eMenuOptions.InsertToGarage:
-                    this.insertVehicleToGarage();
+                    insertVehicleToGarage();
                     break;
                 case eMenuOptions.ShowRegistrationNums:
                     showRegistrationNums();
                     break;
                 case eMenuOptions.ChangeVechicleStatus:
-                    this.changeVehicleStatus();
+                    changeVehicleStatus();
                     break;
                 case eMenuOptions.InflateWheels:
                     break;
@@ -171,7 +240,7 @@ Registration number, owner's name, owner's phone number.");
             StringBuilder userMessage = 
                 new StringBuilder("In which condition should the vehicles be?");
 
-            string[] status = this.m_Garage.GetGarageVehicleStatus();
+            string[] status = m_Garage.GetGarageVehicleStatus();
 
             for (int i = 0; i < status.Length; i++)
             {
@@ -231,7 +300,7 @@ Registration number, owner's name, owner's phone number.");
 
             Console.WriteLine("Please enter the wanted status:");
             
-            string[] status = this.m_Garage.GetGarageVehicleStatus();
+            string[] status = m_Garage.GetGarageVehicleStatus();
 
             for (int i = 0; i < status.Length; i++)
             {
@@ -282,6 +351,8 @@ Registration number, owner's name, owner's phone number.");
 
             return userInput;
         }
+
+       
 
         private bool isValidVehicleType(string i_UserInput)
         {

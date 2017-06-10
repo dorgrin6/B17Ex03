@@ -17,12 +17,12 @@
         {
             get
             {
-                return this.m_IsCarryingHazardousMaterials;
+                return m_IsCarryingHazardousMaterials;
             }
 
             set
             {
-                this.m_IsCarryingHazardousMaterials = value;
+                m_IsCarryingHazardousMaterials = value;
             }
         }
 
@@ -30,13 +30,13 @@
         {
             get
             {
-                return this.m_MaxCarryingWeight;
+                return m_MaxCarryingWeight;
             }
 
             set
             {
-                this.setterRangeCheck((int)value,0,int.MaxValue,"Max carry weight");
-                this.m_MaxCarryingWeight = value;
+                setterRangeCheck((int)value,0,int.MaxValue,"Max carry weight");
+                m_MaxCarryingWeight = value;
             }
         }
 

@@ -6,6 +6,7 @@
         {
         }
 
+        /*
         public void Charge(float i_ChargeAmount)
         {
             if (i_ChargeAmount >= 0 && m_CurrentEnergy + i_ChargeAmount <= m_MaxEnergy)
@@ -14,8 +15,9 @@
             }
             else
             {
-              throw new ValueOutOfRangeException(0, this.m_MaxEnergy, this.ToString());
+              throw new ValueOutOfRangeException(0, m_MaxEnergy, ToString());
             }
         }
+        */
     }
 }

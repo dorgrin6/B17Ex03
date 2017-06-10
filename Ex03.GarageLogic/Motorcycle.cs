@@ -18,12 +18,12 @@
         {
             get
             {
-                return this.m_RegistrationKind;
+                return m_RegistrationKind;
             }
             set
             {
-                this.setterRangeCheck((int)value,(int)eRegistrationKindMin,(int)eRegistrationKindMax,"Registration kind");
-                this.m_RegistrationKind = value;
+                setterRangeCheck((int)value,(int)eRegistrationKindMin,(int)eRegistrationKindMax,"Registration kind");
+                m_RegistrationKind = value;
             }   
         }
 
@@ -31,12 +31,12 @@
         {
             get
             {
-                return this.m_EngineVolume;
+                return m_EngineVolume;
             }
             set
             {
-                this.setterRangeCheck(value, 0, Int32.MaxValue, "Engine volume");
-                this.m_EngineVolume = value;
+                setterRangeCheck(value, 0, Int32.MaxValue, "Engine volume");
+                m_EngineVolume = value;
             }
         }
 
@@ -65,7 +65,7 @@
 
         public override string ToString()
         {
-            return this.m_Engine.ToString() + " Motorcycle";
+            return m_Engine.ToString() + " Motorcycle";
         }
     }
 }

@@ -14,6 +14,12 @@
 
         protected Engine m_Engine;
 
+        private const string k_RegistrationNumName = "registration number";
+
+        private const string k_ModelName = "model name";
+
+        private const string k_CurrentEnergyLevelName = "current energy precentage";
+
         // TODO: should m_EneregyPercentageLeft be also/just in Engine??
 
         protected List<Wheel> m_Wheels;
@@ -97,6 +103,12 @@
             // foreach wheel set maxAirPressure or during the constructor
 
             m_Engine = i_Engine;
+        }
+
+        public virtual void GetVehicleProperties(Dictionary<string, AnswerBank> i_VehicleProperties, Garage.VehicleInGarage i_VehicleToSet)
+        {
+            i_VehicleProperties.Add(k_RegistrationNumName, new AnswerBank(typeof(string)));
+           // i_VehicleProperties.Add(k_CurrentEnergyLevelName, new AnswerBank());
         }
 
         protected void setterRangeCheck(int i_Value, int i_MinVal, int i_MaxVal, string i_Name)
