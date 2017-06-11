@@ -52,15 +52,26 @@
         public Motorcycle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
             : base(i_NumberOfWheels, i_MaxAirPressure, i_Engine)
         {
+            addNamesToDictionary();
         }
 
         public override List<string> GetAdditionalPropertiesNames()
         {
             return new List<string>()
-                       {
-                           EnumService.GetAllItems<eRegistrationKind>("Registration kind:"),
-                           "Engine volume:"
-                       };
+                {
+                    EnumService.GetAllItems<eRegistrationKind>("Registration kind:"),
+                    "Engine volume:"
+                };
+        }
+
+        protected override void addNamesToDictionary()
+        {
+            NamesDictionary.AddName("RegistrationKind", "kind or registration");
+            NamesDictionary.AddName("EngineVolume", "engine volume");
+            NamesDictionary.AddName("A", "A");
+            NamesDictionary.AddName("AB", "AB");
+            NamesDictionary.AddName("A2", "A2");
+            NamesDictionary.AddName("B1", "B1");
         }
 
         public override string ToString()

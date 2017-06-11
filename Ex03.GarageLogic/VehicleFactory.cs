@@ -7,18 +7,20 @@
     {
         public enum eVehicleType
         {
-            LowerBound = 0,
             GasMotorcycle,
             ElectricMotorcycle,
             GasCar,
             ElectricCar,
             Truck,
-            UpperBound
         }
 
-        public static List<string> GetVehicleNames()
+        public static void addNamesToDictionary()
         {
-            return new List<string>() { "Gas motorcycle", "Electric motorcycle", "Gas car", "Electric car", "Truck" };
+            NamesDictionary.AddName("GasMotorcycle", "gas motorcycle");
+            NamesDictionary.AddName("ElectricMotorcycle", "electric motorcycle");
+            NamesDictionary.AddName("GasCar", "gas car");
+            NamesDictionary.AddName("ElectricCar", "electric car");
+            NamesDictionary.AddName("Truck", "truck");
         }
 
         public static Vehicle GetVehicle(eVehicleType i_VehicleType)

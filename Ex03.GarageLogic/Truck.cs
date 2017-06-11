@@ -11,6 +11,7 @@
         public Truck(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
             : base(i_NumberOfWheels, i_MaxAirPressure, i_Engine)
         {
+            addNamesToDictionary();
         }
 
         public bool IsCarryingHazardousMaterials
@@ -43,6 +44,13 @@
         public override List<string> GetAdditionalPropertiesNames()
         {
             return new List<string>() { "Is it carrying hazardous matriels?", "What's the max carrying weight?"};
+        }
+
+        protected override void addNamesToDictionary()
+        {
+            NamesDictionary.AddName("IsCarryingHazardousMaterials", "is carrring hazardous materials");
+            NamesDictionary.AddName("MaxCarryingWeight", "max carry weight");
+
         }
 
         public override string ToString()

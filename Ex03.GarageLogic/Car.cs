@@ -6,53 +6,61 @@
 
     public class Car : Vehicle
     {
-        //        public const eColor eColorMin = eColor.Yellow;
-        //
-        //        public const eColor eColorMax = eColor.Blue;
-        //
-        //        public const eDoorsAmount eDoorsAmountMin = eDoorsAmount.TwoDoors;
-        //
-        //        public const eDoorsAmount eDoorsAmountMax = eDoorsAmount.FiveDoors;
+        private eColor m_Color;
 
-
-
-
-        
-        private PropertyHolder m_Color = new PropertyHolder("color", typeof(Enum));
-
-
-
-        private PropertyHolder m_DoorsAmount = new PropertyHolder("doors amount", typeof(Enum));
+        private eDoorsAmount m_DoorsAmount;
 
         public Car(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
             : base(i_NumberOfWheels, i_MaxAirPressure, i_Engine)
         {
+            addNamesToDictionary();
         }
 
-        public PropertyHolder Color
+        public eColor Color
         {
             get
             {
                 return m_Color;
             }
+            set
+            {
+                m_Color = value;
+            }
         }
 
-
-        public PropertyHolder DoorsAmount
+        public eDoorsAmount DoorsAmount
         {
             get
             {
                 return m_DoorsAmount;
             }
+            set
+            {
+                m_DoorsAmount = value;
+            }
 
+        }
+
+        protected override void addNamesToDictionary()
+        {
+            NamesDictionary.AddName("Color", "color");
+            NamesDictionary.AddName("DoorsAmount", "doors amount");
+            NamesDictionary.AddName("Yellow", "yellow");
+            NamesDictionary.AddName("White", "white");
+            NamesDictionary.AddName("Black", "black");
+            NamesDictionary.AddName("Blue", "blue");
+            NamesDictionary.AddName("Two", "two doors");
+            NamesDictionary.AddName("Three", "three doors");
+            NamesDictionary.AddName("Four", "four doors");
+            NamesDictionary.AddName("Five", "five doors");
         }
 
         public override List<string> GetAdditionalPropertiesNames()
         {
             return new List<string>()
-                       {
-                           EnumService.GetAllItems<eColor>("Colors:"), EnumService.GetAllItems<eDoorsAmount>("Doors amount:")
-                       };
+                {
+                    EnumService.GetAllItems<eColor>("Colors:"), EnumService.GetAllItems<eDoorsAmount>("Doors amount:")
+                };
         }
 
         public enum eColor

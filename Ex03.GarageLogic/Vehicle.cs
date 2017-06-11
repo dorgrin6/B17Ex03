@@ -6,83 +6,78 @@
 
     public abstract class Vehicle
     {
-        private readonly string[] m_Names = new string[] { "model name", "registration number", "current energy", "engine" };
-
-        public enum eProperty
-        {
-            eModelName,
-            eRegistrationNum,
-            eCurrentEnergyPercentage,
-            eEngine
-        }
-
-        private ushort m_PropertyIndex = 0;
-
-        public void SetProperty(eProperty i_Property, string i_Value)
-        {
-            switch (i_Property)
-            {
-               case eProperty.eCurrentEnergyPercentage:
-                    // check valid
-                    m_EneregyPercentageLeft = float.Parse(i_Value);
-                    break;
-                case eProperty.eRegistrationNum:
-                    break;
-                case eProperty.eModelName:
-                    break;
-                case eProperty.eEngine:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(i_Property), i_Property, null);
-            }
-        }
-
-        public Dictionary<string, eProperty> GetProperties()
-        {
-            Dictionary<string, eProperty> result = new Dictionary<string, eProperty>();
-
-            int index = 0;
-            foreach (eProperty prop in Enum.GetValues(typeof(eProperty)))
-            {
-                result.Add(m_Names[index], prop);
-                ++index;
-            }
-
-            return result;
-        }
-
-        protected readonly string m_ModelName;
-
         protected readonly string m_RegistrationNum;
 
-        protected float m_EneregyPercentageLeft;
+        protected string m_ModelName = string.Empty;
+
+        protected float m_EnergyPercentageLeft;
 
         protected Engine m_Engine;
 
-        private const string k_RegistrationNumName = "registration number";
-
-        private const string k_ModelName = "model name";
-
-        private const string k_CurrentEnergyLevelName = "current energy precentage";
-
-        // TODO: should m_EneregyPercentageLeft be also/just in Engine??
-
         protected List<Wheel> m_Wheels;
 
-        // Wheel
-        protected class Wheel
+        // --------------------Wheel------------------------
+
+        public class Wheel
         {
             private readonly string m_Manufacturer;
 
+            private readonly float m_MaxAirPressure;
+
+            private readonly float m_MinAirPressure;
+
             private float m_CurrentAirPressure;
 
-            private float m_MaxAirPressure;
-
-            public Wheel(string i_Manufacturer, float i_CurrentAirPressure, float i_MaxAirPressure)
+            public Wheel(string i_Manufacturer, float i_MaxAirPressure)
             {
                 m_Manufacturer = i_Manufacturer;
-                m_CurrentAirPressure = i_CurrentAirPressure;
                 m_MaxAirPressure = i_MaxAirPressure;
+                m_MinAirPressure = 0;
+                m_CurrentAirPressure = 0;
+            }
+
+            public string Manufacturer
+            {
+                get
+                {
+                    return m_Manufacturer;
+                }
+            }
+
+            public float CurrentAirPressure
+            {
+                get
+                {
+                    return m_CurrentAirPressure;
+                }
+                set
+                {
+                    m_CurrentAirPressure = value;
+                }
+            }
+
+            public float MaxAirPressure
+            {
+                get
+                {
+                    return m_MaxAirPressure;
+                }
+            }
+
+            public float MinAirPressure
+            {
+                get
+                {
+                    return m_MinAirPressure;
+                }
+            }
+
+            private void addNamesToDictionary()
+            {
+                NamesDictionary.AddName("Manufacturer", "manufacturer");
+                NamesDictionary.AddName("CurrentAirPressure", "current air pressure");
+                NamesDictionary.AddName("MaxAirPressure", "max air pressure");
+                NamesDictionary.AddName("MinAirPressure", "min air pressure");
             }
 
             public void Inflate(float i_AddAir)
@@ -98,11 +93,15 @@
             }
         }
 
+
+        //------------------Engine---------------------------
         public abstract class Engine
         {
-            protected readonly float m_MaxEnergy;
+            private readonly float m_MaxEnergy;
 
-            protected float m_CurrentEnergy;
+            private readonly float m_MinEnergy;
+
+            private float m_CurrentEnergy;
 
             public enum eEngineType
             {
@@ -112,16 +111,46 @@
 
             protected Engine(float i_MaxEnergy)
             {
-                this.m_MaxEnergy = i_MaxEnergy;
-                this.m_CurrentEnergy = i_MaxEnergy;
+                m_MaxEnergy = i_MaxEnergy;
+                m_MinEnergy = 0;
+                m_CurrentEnergy = 0;
+                addNamesToDictionary();
             }
 
-            /*
-            protected Engine(float i_MaxEnergy, float i_CurrentEnergy)
+            public float CurrentEnergy
             {
-                m_MaxEnergy = i_MaxEnergy;
-                m_CurrentEnergy = i_CurrentEnergy;
-            }*/
+                get
+                {
+                    return m_CurrentEnergy;
+                }
+                set
+                {
+                    m_CurrentEnergy = value;
+                }
+            }
+
+            public float MaxEnergy
+            {
+                get
+                {
+                    return m_MaxEnergy;
+                }
+            }
+
+            public float MinEnergy
+            {
+                get
+                {
+                    return m_MinEnergy;
+                }
+            }
+
+            private void addNamesToDictionary()
+            {
+                NamesDictionary.AddName("CurrentEnergy", "current energy");
+                NamesDictionary.AddName("MaxEnergy", "max energy");
+                NamesDictionary.AddName("MinEnergy", "min energy");
+            }
 
             public override string ToString()
             {
@@ -141,19 +170,59 @@
                 return result;
             }
         }
-
+        
         public Vehicle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
         {
             m_Wheels = new List<Wheel>(i_NumberOfWheels);
             // foreach wheel set maxAirPressure or during the constructor
 
             m_Engine = i_Engine;
+            addVehicleNamesToDictionary();
         }
 
-        public virtual void GetVehicleProperties(Dictionary<string, AnswerBank> i_VehicleProperties, Garage.VehicleInGarage i_VehicleToSet)
+        protected abstract void addNamesToDictionary();
+
+        private void addVehicleNamesToDictionary()
         {
-            i_VehicleProperties.Add(k_RegistrationNumName, new AnswerBank(typeof(string)));
-           // i_VehicleProperties.Add(k_CurrentEnergyLevelName, new AnswerBank());
+            NamesDictionary.AddName("RegistrationNum", "registration number");
+            NamesDictionary.AddName("ModelName", "model name");
+            NamesDictionary.AddName("EnergyPercentageLeft", "energy percentage left");
+        }
+
+        public string ModelName
+        {
+            get
+            {
+                return m_ModelName;
+            }
+            set
+            {
+                m_ModelName = value;
+            }
+        }
+
+        public float EnergyPercentageLeft
+        {
+            get
+            {
+                return m_EnergyPercentageLeft;
+            }
+        }
+
+        public Engine VehicleEngine
+        {
+            get
+            {
+                return m_Engine;
+            }
+        }
+
+        public List<Wheel> VehicleWheels
+        {
+            get
+            {
+                return m_Wheels;
+            }
         }
 
         protected void setterRangeCheck(int i_Value, int i_MinVal, int i_MaxVal, string i_Name)

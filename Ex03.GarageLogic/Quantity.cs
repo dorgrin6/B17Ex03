@@ -4,14 +4,14 @@
     {
         private float m_CurrentValue;
 
-        private float m_Min;
+        private readonly float m_Min;
 
-        private float m_Max;
+        private readonly float m_Max;
 
-
-        public bool IsInRange(float i_Value)
+        public Quantity(float i_Min, float i_Max)
         {
-            return i_Value >= m_Min && i_Value <= m_Max;
+            m_Min = i_Min;
+            m_Max = i_Max;
         }
 
         public float CurrentValue
@@ -32,10 +32,6 @@
             {
                 return m_Max;
             }
-            set
-            {
-                m_Max = value;
-            }
         }
 
         public float Min
@@ -44,11 +40,11 @@
             {
                 return m_Min;
             }
-            set
-            {
-                m_Min = value;
-            }
         }
 
+        public bool IsInRange(float i_Value)
+        {
+            return i_Value >= m_Min && i_Value <= m_Max;
+        }
     }
 }

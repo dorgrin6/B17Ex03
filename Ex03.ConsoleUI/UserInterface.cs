@@ -64,9 +64,8 @@ Registration number, owner's name, owner's phone number.");
             
             string message = "Please choose the vehicle's type:";
             Console.WriteLine(message);
-            List<string> vehicleNames = VehicleFactory.GetVehicleNames(); // get names from factory
-
-            //Console.WriteLine(createEnumaration(vehicleNames));
+            VehicleFactory.addNamesToDictionary();
+            Console.WriteLine(createEnumaration(Enum.GetNames(typeof(VehicleFactory.eVehicleType))));
             string input = getUserInput(eInputValidation.VehicleType, message);
 
 
@@ -95,15 +94,40 @@ Registration number, owner's name, owner's phone number.");
         }*/
 
 
-        private void setAdditionalProperties(Vehicle i_Vehicle)
+        private void setAdditionalProperties(object i_Object)
         {
+            Type propertyType = null;
 
-            foreach (var tup in i_Vehicle.GetProperties())
+            foreach (PropertyInfo prop in i_Object.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
             {
-                Console.WriteLine("Please insert {0}", tup.Key);
-                string input = Console.ReadLine();
+                propertyType = prop.GetValue(i_Object).GetType();
+                if (prop.CanWrite)
+                {
+                    Console.WriteLine("Please enter the {0}:", NamesDictionary.GetValue(prop.Name));
+                    if (propertyType == typeof(string))
+                    {
+                        //TODO: check if all chars are letters?
+                    }
+                    else if (propertyType == typeof(bool))
+                    {
+
+                    }
+                    else if (propertyType == typeof(int) || propertyType == typeof(float) || propertyType == typeof(double))
+                    {
+
+                    }
+                    else if (propertyType.IsEnum)
+                    {
+                        Console.WriteLine(createEnumaration(propertyType.GetEnumNames()));
+                        //we need to check is input isDefined in enum range of values
+                    }
+                }
+                else if (propertyType.IsClass)
+                {
+                    setAdditionalProperties(prop.GetValue(i_Object));
+                }
             }
-            
+
             /*
             PropertyInfo[] info = i_Vehicle.GetType().GetProperties();
 
@@ -206,7 +230,7 @@ Registration number, owner's name, owner's phone number.");
             int index = 1;
             foreach (string str in i_Enumarte)
             {
-                builder.AppendFormat("{0}) {1} ", index, str);
+                builder.AppendFormat("{0}) {1} ", index, NamesDictionary.GetValue(str));
                 if (index != i_Enumarte.Length)
                 {
                     builder.AppendLine();
@@ -342,10 +366,12 @@ Registration number, owner's name, owner's phone number.");
                         isLegalInput = isValidMenuInput(userInput);
                         break;
                     case eInputValidation.RegistrationScreen:
-                        isLegalInput = isValidRegistrationInput(userInput);
+                        //isLegalInput = isValidRegistrationInput(userInput);
+                        isLegalInput = true;
                         break;
                     case eInputValidation.VehicleType:
-                        isLegalInput = isValidVehicleType(userInput);
+                        //isLegalInput = isValidVehicleType(userInput);
+                        isLegalInput = true;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(i_InputKind), i_InputKind, null);
@@ -362,7 +388,7 @@ Registration number, owner's name, owner's phone number.");
         }
 
        
-
+        /*
         private bool isValidVehicleType(string i_UserInput)
         {
             ushort input;
@@ -370,7 +396,7 @@ Registration number, owner's name, owner's phone number.");
                    && ((input + 1) >= (ushort)VehicleFactory.eVehicleType.LowerBound
                        && (input + 1) <= (ushort)VehicleFactory.eVehicleType.UpperBound);
         }
-
+        */
         private bool isValidMenuInput(string i_UserInput)
         {
             ushort input;
@@ -378,12 +404,14 @@ Registration number, owner's name, owner's phone number.");
                    && (input + 1) <= (ushort)eMenuOptions.UpperBound);
         }
 
+        /*
         private bool isValidRegistrationInput(string i_UserInput)
         {
             ushort input;
             return ushort.TryParse(i_UserInput, out input) && ((input + 1) >= (ushort)VehicleFactory.eVehicleType.LowerBound
                    && (input + 1) <= (ushort)VehicleFactory.eVehicleType.UpperBound);
         }
+        */
     }
 }
 
