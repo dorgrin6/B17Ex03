@@ -7,20 +7,11 @@
     {
         public enum eVehicleType
         {
-            GasMotorcycle,
+            GasMotorcycle = 1,
             ElectricMotorcycle,
             GasCar,
             ElectricCar,
-            Truck,
-        }
-
-        public static void addNamesToDictionary()
-        {
-            NamesDictionary.AddName("GasMotorcycle", "gas motorcycle");
-            NamesDictionary.AddName("ElectricMotorcycle", "electric motorcycle");
-            NamesDictionary.AddName("GasCar", "gas car");
-            NamesDictionary.AddName("ElectricCar", "electric car");
-            NamesDictionary.AddName("Truck", "truck");
+            Truck
         }
 
         public static Vehicle GetVehicle(eVehicleType i_VehicleType)
@@ -52,6 +43,7 @@
             return vehicle;
         }
 
+        /*
         public static bool TryGetNewVehicle(eVehicleType i_VehicleType, out Vehicle i_Vehicle)
         {
             i_Vehicle = null;
@@ -70,5 +62,6 @@
 
             return result;
         }
+        */
     }
 }

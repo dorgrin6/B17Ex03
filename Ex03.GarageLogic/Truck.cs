@@ -1,9 +1,14 @@
-﻿namespace Ex03.GarageLogic
-{
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-    class Truck : Vehicle
+namespace Ex03.GarageLogic
+{
+    public class Truck : Vehicle
     {
+        private const string k_IsCarryingHazardousMaterials = "has hazardous materials";
+
+        private const string k_MaxCarryingWeight = "max carrying weight";
+
         private bool m_IsCarryingHazardousMaterials;
 
         private float m_MaxCarryingWeight;
@@ -11,7 +16,6 @@
         public Truck(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
             : base(i_NumberOfWheels, i_MaxAirPressure, i_Engine)
         {
-            addNamesToDictionary();
         }
 
         public bool IsCarryingHazardousMaterials
@@ -27,7 +31,7 @@
             }
         }
 
-        public float MaxCarryWeight
+        public float MaxCarryingWeight
         {
             get
             {
@@ -36,26 +40,35 @@
 
             set
             {
-                setterRangeCheck((int)value,0,int.MaxValue,"Max carry weight");
+                //setterRangeCheck((int)value,0,int.MaxValue,"Max carry weight");
                 m_MaxCarryingWeight = value;
             }
         }
 
-        public override List<string> GetAdditionalPropertiesNames()
+        public override void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
-            return new List<string>() { "Is it carrying hazardous matriels?", "What's the max carrying weight?"};
+            base.AddProperties(i_Properties);
+            i_Properties.Add(k_IsCarryingHazardousMaterials, PropertyHolder.createPropertyForType<bool>());
+            i_Properties.Add(k_MaxCarryingWeight, PropertyHolder.createPropertyForType<float>());
         }
 
-        protected override void addNamesToDictionary()
+        public override void SetProperties(Dictionary<string, string> i_Properties)
         {
-            NamesDictionary.AddName("IsCarryingHazardousMaterials", "is carrring hazardous materials");
-            NamesDictionary.AddName("MaxCarryingWeight", "max carry weight");
-
+            base.SetProperties(i_Properties);
+            IsCarryingHazardousMaterials = bool.Parse(i_Properties[k_IsCarryingHazardousMaterials]);
+            MaxCarryingWeight = float.Parse(i_Properties[k_MaxCarryingWeight]);
         }
 
         public override string ToString()
         {
             return "Truck";
         }
+
+        /*
+        public override List<string> GetAdditionalPropertiesNames()
+        {
+            return new List<string>() { "Is it carrying hazardous matriels?", "What's the max carrying weight?" };
+        }
+        */
     }
 }

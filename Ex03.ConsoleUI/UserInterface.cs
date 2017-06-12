@@ -23,223 +23,108 @@ namespace Ex03.ConsoleUI
 
         public enum eMenuOptions
         {
-            LowerBound = 0,
             InsertToGarage = 1,
-            ShowRegistrationNums = 2,
-            ChangeVechicleStatus = 3,
-            InflateWheels = 4,
-            RefuelGas = 5,
-            ChargeElectric = 6,
-            ShowAllDetails = 7,
-            UpperBound = 8
-        }
-
-        public enum eWantedParams
-        {
-            RegistartionNum,
-            OwnersName,
-            OwnersPhoneNum
-
+            ShowRegistrationNums,
+            ChangeVechicleStatus,
+            InflateWheels,
+            RefuelGas,
+            ChargeElectric,
+            ShowAllDetails,
+            Exit
         }
 
         public void Run()
         {
-            // TODO: when to exit?
+            eMenuOptions userChoice;
+            int enumMaxValue, enumMinValue;
+
             do
             {
-                eMenuOptions userChoice = showMainMenu();
+                showMainMenu();
+                getEnumMinMaxValue(typeof(eMenuOptions), out enumMaxValue, out enumMinValue);
+                userChoice = (eMenuOptions)Enum.Parse(typeof(eMenuOptions),getUserInput<Enum>(enumMaxValue,enumMinValue,true));
                 handleMainInput(userChoice);
             }
             while (true);
         }
 
-        private void insertVehicleToGarage()
+        private void showMainMenu()
         {
-            Console.WriteLine(
-@"Please insert the following in respective order:
-Registration number, owner's name, owner's phone number.");
-            string regisrationNum = Console.ReadLine();
-            string ownerName = Console.ReadLine();
-            string ownerPhoneNum = Console.ReadLine();
-            
-            string message = "Please choose the vehicle's type:";
-            Console.WriteLine(message);
-            VehicleFactory.addNamesToDictionary();
-            Console.WriteLine(createEnumaration(Enum.GetNames(typeof(VehicleFactory.eVehicleType))));
-            string input = getUserInput(eInputValidation.VehicleType, message);
-
-
-
-            Vehicle toInsert = VehicleFactory.GetVehicle((VehicleFactory.eVehicleType)ushort.Parse(input));
-            setAdditionalProperties(toInsert);
-
-
-            // TODO: ask for properties and insert them
-            //m_Garage.InsertVehicle(regisrationNum, ownerName, ownerPhoneNum, );
+            const string mainMenu =
+@"Choose operation:
+1) Insert a vehicle to garage.
+2) See all registration numbers of vehicle in garage.
+3) Change a vehicle's status.
+4) Inflate car's wheels to maximum.
+5) Refuel gas engine of vehicle.
+6) Charge electric engine of vehicle.
+7) Show All details of vehicle.
+8) Exit.";
+            Console.WriteLine(mainMenu);
         }
 
-/*        private void setBasicProperties(Vehicle i_Vehicle)
+        private string getUserInput<T>()
         {
-            string wheelManufacturer;
-            float currentAirPressure;
+            return getUserInput<T>(default(float), default(float), false);
+        }
 
-            Console.WriteLine("Please enter the model name:");
-            i_Vehicle.ModelName = Console.ReadLine();
-            Console.WriteLine("Please enter the wheel's manufacturer:");
-            wheelManufacturer = Console.ReadLine();
-            Console.WriteLine("Please enter the wheel's current air pressure:");
-             
-           
-
-        }*/
-
-
-        private void setAdditionalProperties(object i_Object)
+        private string getUserInput<T>(float i_MaxRange, float i_MinRange, bool i_IsRanged)
         {
-            Type propertyType = null;
-
-            foreach (PropertyInfo prop in i_Object.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+            string input;
+            bool isLegalInput;
+            do
             {
-                propertyType = prop.GetValue(i_Object).GetType();
-                if (prop.CanWrite)
+                isLegalInput = true;
+                input = Console.ReadLine();
+                try
                 {
-                    Console.WriteLine("Please enter the {0}:", NamesDictionary.GetValue(prop.Name));
-                    if (propertyType == typeof(string))
+                    if (typeof(T) == typeof(int))
                     {
-                        //TODO: check if all chars are letters?
+                        handleInput<int>(input, int.Parse);
                     }
-                    else if (propertyType == typeof(bool))
+                    else if (typeof(T) == typeof(bool))
                     {
-
+                        handleInput<bool>(input, bool.Parse);
                     }
-                    else if (propertyType == typeof(int) || propertyType == typeof(float) || propertyType == typeof(double))
+                    else if (typeof(T) == typeof(float) || typeof(T) == typeof(Enum))
                     {
-
-                    }
-                    else if (propertyType.IsEnum)
-                    {
-                        Console.WriteLine(createEnumaration(propertyType.GetEnumNames()));
-                        //we need to check is input isDefined in enum range of values
+                        handleInput<float>(input, i_MaxRange, i_MinRange, i_IsRanged, float.Parse);
                     }
                 }
-                else if (propertyType.IsClass)
+                catch (ValueOutOfRangeException exception)
                 {
-                    setAdditionalProperties(prop.GetValue(i_Object));
+                    isLegalInput = false;
+                    Console.WriteLine("Wrong input. Value should be between {0} to {1}.", exception.minValue, exception.maxValue);
+                    Console.WriteLine("Please try again.");
+                }
+                catch (FormatException)
+                {
+                    isLegalInput = false;
+                    Console.WriteLine("Wrong Input. Please try again.");
                 }
             }
+            while (!isLegalInput);
 
-            /*
-            PropertyInfo[] info = i_Vehicle.GetType().GetProperties();
-
-
-
-
-            foreach (PropertyInfo prop in info)
-            {
-                //Console.WriteLine((prop.GetValue(i_Vehicle) as PropertyHolder).Name);
-                
-                if ((prop.GetValue(i_Vehicle) as PropertyHolder).ValueType == typeof(Enum))
-                {
-                    Type zzz = (prop.GetValue(i_Vehicle)).GetType();
-                    Console.WriteLine(createEnumaration(zzz.GetEnumNames()));
-                }
-
-                //if ((prop.GetValue(i_Vehicle) as PropertyHolder).ValueType.IsEnum)
-                //{
-
-                //Type zachi = (prop.GetValue(i_Vehicle) as PropertyHolder).ValueType;
-
-                //Type zachi = (prop.GetValue(i_Vehicle) as PropertyHolder<Enum>).ValueType;
-
-                // Console.WriteLine(createEnumaration(zachi.GetEnumNames()));
-                //                    
-                //
-                //
-                //                    foreach (var enums in zachi.GetEnumValues())
-                //                    {
-                //                        Console.WriteLine(enums);
-                //                    }
-                //                   
-
-
-            
-
-
-//                Type typ = prop.GetValue(i_Vehicle)
-//                    
-//                    .GetType();
-//                {
-//                    
-//                }
-//
-//                Type propertyType = prop.GetValue(i_Vehicle).GetType();
-
-                //bool check = Enum.IsDefined(propertyType, 5);
-
-                //object deff = prop.PropertyType;
-            }
-
-            /*
-            PropertyInfo[] info = i_Vehicle.GetType().GetProperties();
-
-            foreach (PropertyInfo prop in info)
-            {
-                bool validInput;
-                do
-                {
-                    Console.WriteLine(string.Format("Please insert {0}:", prop.Name));
-                    string input = Console.ReadLine();
-                    int inputNum;
-                    
-                    validInput = true;
-                    try
-                    {
-                        if (int.TryParse(input, out inputNum))
-                        {
-                            prop.SetValue(i_Vehicle, inputNum, null);
-                        }
-                        else
-                        {
-                            validInput = false;
-                        }
-                    }
-                    catch (ValueOutOfRangeException i_Except)
-                    {
-                        validInput = false;
-                        Console.WriteLine(
-                            "Wrong input. Please insert values in range({0}-{1})",
-                            i_Except.minValue,
-                            i_Except.maxValue);
-                    }
-                    catch (FormatException i_Except)
-                    {
-                        validInput = false;
-                        Console.WriteLine("Wrong input format");
-                    }
-                }
-                while (!validInput);
-            }
-            */
+            return input;
         }
 
 
-        private string createEnumaration(string[] i_Enumarte)
+        private void handleInput<T>(string i_Input, Func<string,T> i_Parse)
         {
-            StringBuilder builder = new StringBuilder();
+            handleInput<T>(i_Input, default(float), default(float), false, i_Parse);
+        }
 
-            int index = 1;
-            foreach (string str in i_Enumarte)
+        private void handleInput<T>(string i_Input, float i_MaxRange, float i_MinRange, bool i_IsRanged, Func<string,T> i_Parse)
+        {
+            T value;
+            IComparable valueComparable;
+
+            value = i_Parse(i_Input);
+            valueComparable = (IComparable)value;
+            if (i_IsRanged && (valueComparable.CompareTo(i_MaxRange) > 0 || valueComparable.CompareTo(i_MinRange) < 0))
             {
-                builder.AppendFormat("{0}) {1} ", index, NamesDictionary.GetValue(str));
-                if (index != i_Enumarte.Length)
-                {
-                    builder.AppendLine();
-                }
-
-                ++index;
+                throw new ValueOutOfRangeException(i_MinRange, i_MaxRange, string.Empty);
             }
-
-            return builder.ToString();
         }
 
         private void handleMainInput(eMenuOptions userChoice)
@@ -250,10 +135,10 @@ Registration number, owner's name, owner's phone number.");
                     insertVehicleToGarage();
                     break;
                 case eMenuOptions.ShowRegistrationNums:
-                    showRegistrationNums();
+                    //showRegistrationNums();
                     break;
                 case eMenuOptions.ChangeVechicleStatus:
-                    changeVehicleStatus();
+                    //changeVehicleStatus();
                     break;
                 case eMenuOptions.InflateWheels:
                     break;
@@ -264,10 +149,204 @@ Registration number, owner's name, owner's phone number.");
                 case eMenuOptions.ShowAllDetails:
                     break;
                 default:
-                    throw new FormatException("Bad menu option selected");
+                    throw new FormatException("Bad menu option selected.");
             }
         }
 
+        private void insertVehicleToGarage()
+        {
+            string messageRegistrationNumber = "Please enter the vehicle's registration number:";
+            string inputRegistrationNumber;
+            bool isLegalInput = true;
+            Vehicle newVehicle = null;
+            Owner newOwner = null;
+
+            Console.WriteLine(messageRegistrationNumber);
+            try
+            {
+                do
+                {
+                    inputRegistrationNumber = Console.ReadLine();
+                    isLegalInput = !(m_Garage.isVehicleExistsInGarage(inputRegistrationNumber));
+                    if (isLegalInput == false)
+                    {
+                        Console.WriteLine("The vehicle is already exists in the garage. Please try another registration number.");
+                    }
+                }
+                while (!isLegalInput);
+                getNewVehicleProperties(inputRegistrationNumber, newVehicle, newOwner);
+                m_Garage.AddVehicleToGarage(inputRegistrationNumber, newVehicle, newOwner);
+                Console.Clear();
+                Console.WriteLine("Vehicle {0} was added successfully to garage.",inputRegistrationNumber);
+            }
+            catch
+            {
+                Console.WriteLine("Wrong input. Vehicle wasn't added to garage.");
+            }
+            
+        }
+
+        private void getNewVehicleProperties(string i_RegistrationNumber, Vehicle i_Vehicle, Owner i_Owner)
+        {
+            string messageVehicleType = "Please choose the vehicle's type:";
+            string inputVehicleType;
+            int enumMinValue, enumMaxValue;
+
+            Console.WriteLine(messageVehicleType);
+            Console.WriteLine(createEnumaration(Enum.GetNames(typeof(VehicleFactory.eVehicleType))));
+            getEnumMinMaxValue(typeof(VehicleFactory.eVehicleType), out enumMaxValue, out enumMinValue);
+            inputVehicleType = getUserInput<VehicleFactory.eVehicleType>(enumMaxValue,enumMinValue,true);
+            i_Vehicle = VehicleFactory.GetVehicle((VehicleFactory.eVehicleType)ushort.Parse(inputVehicleType));
+            getAdditionalVehicleProperties(i_RegistrationNumber, i_Vehicle);
+            getAdditionalOwnerDetails(i_Owner);
+        }
+        
+        private void getAdditionalVehicleProperties(string i_RegistrationNumber, Vehicle i_Vehicle)
+        {
+            Dictionary<string, PropertyHolder> propertiesInfo = new Dictionary<string, PropertyHolder>();
+            Dictionary<string, string> propertiesDone = new Dictionary<string, string>();
+
+            i_Vehicle.RegistrationNumber = i_RegistrationNumber;
+            i_Vehicle.AddProperties(propertiesInfo);
+            getVehiclePropertiesFromUser(propertiesInfo, propertiesDone);
+            i_Vehicle.SetProperties(propertiesDone);
+        }
+
+        private void getVehiclePropertiesFromUser(Dictionary<string,PropertyHolder> i_PropertiesInfo, Dictionary<string,string> i_PropertiesDone)
+        {
+            Type typeOfProperty;
+            foreach (string prop in i_PropertiesInfo.Keys)
+            {
+                Console.WriteLine("Please enter {0}:", prop);
+                typeOfProperty = i_PropertiesInfo[prop].ValueType;
+                if (typeOfProperty == typeof(int))
+                {
+                    i_PropertiesDone.Add(prop, getUserInput<int>());
+                }
+                else if (typeOfProperty == typeof(float))
+                {
+                    getFloatProperty(prop, i_PropertiesInfo, i_PropertiesDone);
+                }
+                else if (typeOfProperty == typeof(bool))
+                {
+                    getBoolProperty(prop, i_PropertiesInfo, i_PropertiesDone);
+                }
+                else if (typeOfProperty.IsEnum)
+                {
+                    getEnumProperty(prop, i_PropertiesInfo, i_PropertiesDone);
+                }
+                else
+                {
+                    i_PropertiesDone.Add(prop, getUserInput<string>());
+                }
+            }
+        }
+
+        private void getFloatProperty(string i_PropertyName, Dictionary<string, PropertyHolder> i_PropertiesInfo,
+            Dictionary<string, string> i_PropertiesDone)
+        {
+            if (i_PropertiesInfo[i_PropertyName].isFloatRanged)
+            {
+                i_PropertiesDone.Add(
+                    i_PropertyName, getUserInput<float>(
+                        i_PropertiesInfo[i_PropertyName].MaxFloatValue, i_PropertiesInfo[i_PropertyName].MinFloatValue, true));
+            }
+            else
+            {
+                i_PropertiesDone.Add(i_PropertyName, getUserInput<float>());
+            }
+        }
+
+        private void getBoolProperty(string i_PropertyName, Dictionary<string, PropertyHolder> i_PropertiesInfo,
+            Dictionary<string, string> i_PropertiesDone)
+        {
+            Console.WriteLine("Choose True/False.");
+            i_PropertiesDone.Add(i_PropertyName, getUserInput<bool>());
+        }
+
+        private void getEnumProperty(string i_PropertyName, Dictionary<string, PropertyHolder> i_PropertiesInfo,
+            Dictionary<string, string> i_PropertiesDone)
+        {
+            int enumMinValue, enumMaxValue;
+            Console.WriteLine(createEnumaration(i_PropertiesInfo[i_PropertyName].OptionalEnumValues.ToArray()));
+            getEnumMinMaxValue(i_PropertiesInfo[i_PropertyName].ValueType, out enumMaxValue, out enumMinValue);
+            i_PropertiesDone.Add(i_PropertyName, getUserInput<Enum>(enumMaxValue, enumMinValue, true));
+        }
+
+        private void getEnumMinMaxValue(Type i_Enum, out int o_Max, out int o_Min)
+        {
+            Array enumValues = Enum.GetValues(i_Enum);
+            o_Min = (int)enumValues.GetValue(0);
+            o_Max = (int)enumValues.GetValue(enumValues.Length - 1);
+        }
+        
+        private void getAdditionalOwnerDetails(Owner i_Owner)
+        {
+            string messageName = "Enter owner's name:";
+            string messagePhoneNumber = "Enter owner's phone number:";
+            string ownerName;
+            string ownerPhoneNumber;
+
+            ownerName = getOwnersDetail(messageName, char.IsLetter);
+            ownerPhoneNumber = getOwnersDetail(messagePhoneNumber, char.IsDigit);
+            i_Owner = new Owner(ownerName, ownerPhoneNumber);
+        }
+
+        private string getOwnersDetail(string i_Message, Func<char,bool> i_checkChar)
+        {
+            string messageWrongInput = "Invalid input. Please try again.";
+            string input;
+            bool isLegalInput;
+            do
+            {
+                isLegalInput = true;
+                Console.WriteLine(i_Message);
+                input = getUserInput<string>();
+                isLegalInput = isAllLettersOrDigits(input, i_checkChar);
+                if (!isLegalInput)
+                {
+                    Console.WriteLine(messageWrongInput);
+                }
+            }
+            while (!isLegalInput);
+
+            return input;
+        }
+
+        private bool isAllLettersOrDigits(string i_Input, Func<char,bool> i_checkChar)
+        {
+            bool isAllLettersOrDigits = true;
+
+            foreach(char ch in i_Input)
+            {
+                if (!i_checkChar(ch))
+                {
+                    isAllLettersOrDigits = false;
+                }
+            }
+            return isAllLettersOrDigits;
+        }
+
+
+        private string createEnumaration(string[] i_Enumarte)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            int index = 1;
+            foreach (string str in i_Enumarte)
+            {
+                builder.AppendFormat("{0}) {1} ", index, str);
+                if (index != i_Enumarte.Length)
+                {
+                    builder.AppendLine();
+                }
+                ++index;
+            }
+
+            return builder.ToString();
+        }
+
+        /*
         private void showRegistrationNums()
         {
             StringBuilder userMessage = 
@@ -296,26 +375,7 @@ Registration number, owner's name, owner's phone number.");
             }
         }
 
-        private eMenuOptions showMainMenu()
-        {
-            string input;
-            eMenuOptions userChoice;
-
-            const string optionsMenu = 
-@"Choose operation:
-1) Insert a vehicle to garage.
-2) See all registration numbers of vehicle in garage.
-3) Change a vehicle's status.
-4) Inflate car's wheels to maximum.
-5) Refuel gas engine of vehicle.
-6) Charge electric engine of vehicle.
-7) Show All details of vehicle.";
-
-            input = getUserInput(eInputValidation.MainMenu, optionsMenu);
-            userChoice = (eMenuOptions)ushort.Parse(input);
-
-            return userChoice;
-        }
+        
 
         private void changeVehicleStatus()
         {
@@ -339,79 +399,13 @@ Registration number, owner's name, owner's phone number.");
             {
                 Console.WriteLine("{0}) {1} {2}", Environment.NewLine, i + 1, status[i]);
             }
-
+            
             //TODO: continue here, should get input and change vehicle status
             //wantedVehicle.VehicleStatus = getUserInput(eInputValidation.ChangeVehicleStatusScreen, String.Empty);
         }
-        
-
-        private string getUserInput(eInputValidation i_InputKind, string i_UserMessage)
-        {
-            string userInput;
-            bool isLegalInput = false;
-            ushort input;
-
-            do
-            {
-                Console.WriteLine(i_UserMessage);
-                userInput = Console.ReadLine();
-
-                // check input by kind
-                switch (i_InputKind)
-                {
-                    case eInputValidation.Blank:
-                        isLegalInput = ushort.TryParse(userInput, out input);
-                        break;
-                    case eInputValidation.MainMenu:
-                        isLegalInput = isValidMenuInput(userInput);
-                        break;
-                    case eInputValidation.RegistrationScreen:
-                        //isLegalInput = isValidRegistrationInput(userInput);
-                        isLegalInput = true;
-                        break;
-                    case eInputValidation.VehicleType:
-                        //isLegalInput = isValidVehicleType(userInput);
-                        isLegalInput = true;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(i_InputKind), i_InputKind, null);
-                }
-
-                if (!isLegalInput)
-                {
-                    Console.WriteLine("Wrong input, please try again");
-                }
-            }
-            while (!isLegalInput);
-
-            return userInput;
-        }
-
-       
-        /*
-        private bool isValidVehicleType(string i_UserInput)
-        {
-            ushort input;
-            return ushort.TryParse(i_UserInput, out input)
-                   && ((input + 1) >= (ushort)VehicleFactory.eVehicleType.LowerBound
-                       && (input + 1) <= (ushort)VehicleFactory.eVehicleType.UpperBound);
-        }
         */
-        private bool isValidMenuInput(string i_UserInput)
-        {
-            ushort input;
-            return ushort.TryParse(i_UserInput, out input) && ((input + 1) >= (ushort)eMenuOptions.LowerBound
-                   && (input + 1) <= (ushort)eMenuOptions.UpperBound);
-        }
 
-        /*
-        private bool isValidRegistrationInput(string i_UserInput)
-        {
-            ushort input;
-            return ushort.TryParse(i_UserInput, out input) && ((input + 1) >= (ushort)VehicleFactory.eVehicleType.LowerBound
-                   && (input + 1) <= (ushort)VehicleFactory.eVehicleType.UpperBound);
-        }
-        */
+
     }
 }
 

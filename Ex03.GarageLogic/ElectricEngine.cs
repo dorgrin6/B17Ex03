@@ -2,7 +2,7 @@
 {
     public class ElectricEngine : Vehicle.Engine
     {
-        public ElectricEngine(float i_MaxEnergy) : base(i_MaxEnergy)
+        public ElectricEngine(float i_MaxEnergy) : base(i_MaxEnergy, eEngineType.Electric)
         {
         }
 

@@ -4,11 +4,6 @@
     {
         private eFuelType m_FuelType;
 
-        public GasEngine(eFuelType i_FuelType, float i_MaxEnergy) : base(i_MaxEnergy)
-        {
-            m_FuelType = i_FuelType;
-        }
-
         public enum eFuelType
         {
             Soler,
@@ -16,5 +11,11 @@
             Octan96,
             Octan98
         }
+
+        public GasEngine(eFuelType i_FuelType, float i_MaxEnergy) : base(i_MaxEnergy, eEngineType.Gas)
+        {
+            m_FuelType = i_FuelType;
+        }
+
     }
 }

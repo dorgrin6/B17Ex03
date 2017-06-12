@@ -6,33 +6,42 @@
 
     public abstract class Vehicle
     {
-        protected readonly string m_RegistrationNum;
+        private const string k_RegistrationNum = "registration number";
+        private const string k_ModelName = "model name";
+        private const string k_EnergyPercentageLeft = "energy percentage left";
 
-        protected string m_ModelName = string.Empty;
+        private string m_RegistrationNum;
 
-        protected float m_EnergyPercentageLeft;
+        private string m_ModelName;
 
-        protected Engine m_Engine;
+        private float m_EnergyPercentageLeft;
 
-        protected List<Wheel> m_Wheels;
+        private Engine m_Engine;
+
+        private List<Wheel> m_Wheels;
+
 
         // --------------------Wheel------------------------
 
         public class Wheel
         {
-            private readonly string m_Manufacturer;
+            private const string k_MaxAirPressure = "wheel's max air pressure";
+
+            private const string k_CurrentAirPressure = "wheel's current air pressure";
+
+            private const string k_Manufacturer = "wheel's manufacturer";
 
             private readonly float m_MaxAirPressure;
 
-            private readonly float m_MinAirPressure;
+            private const float m_MinAirPressure = 0;
 
             private float m_CurrentAirPressure;
 
-            public Wheel(string i_Manufacturer, float i_MaxAirPressure)
+            private string m_Manufacturer;
+
+            public Wheel(float i_MaxAirPressure)
             {
-                m_Manufacturer = i_Manufacturer;
                 m_MaxAirPressure = i_MaxAirPressure;
-                m_MinAirPressure = 0;
                 m_CurrentAirPressure = 0;
             }
 
@@ -41,6 +50,10 @@
                 get
                 {
                     return m_Manufacturer;
+                }
+                set
+                {
+                    m_Manufacturer = value;
                 }
             }
 
@@ -52,6 +65,10 @@
                 }
                 set
                 {
+                    if (value > MaxAirPressure || value < MinAirPressure)
+                    {
+                        throw new ValueOutOfRangeException(MinAirPressure, MaxAirPressure, string.Empty);
+                    }
                     m_CurrentAirPressure = value;
                 }
             }
@@ -72,12 +89,16 @@
                 }
             }
 
-            private void addNamesToDictionary()
+            public void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
             {
-                NamesDictionary.AddName("Manufacturer", "manufacturer");
-                NamesDictionary.AddName("CurrentAirPressure", "current air pressure");
-                NamesDictionary.AddName("MaxAirPressure", "max air pressure");
-                NamesDictionary.AddName("MinAirPressure", "min air pressure");
+                i_Properties.Add(k_Manufacturer, PropertyHolder.createPropertyForType<string>());
+                i_Properties.Add(k_CurrentAirPressure, PropertyHolder.createPropertyForType<float>(MaxAirPressure, MinAirPressure, true));
+            }
+
+            public void SetProperties(Dictionary<string, string> i_Properties)
+            {
+                Manufacturer = i_Properties[k_Manufacturer];
+                CurrentAirPressure = float.Parse(i_Properties[k_CurrentAirPressure]);
             }
 
             public void Inflate(float i_AddAir)
@@ -97,24 +118,31 @@
         //------------------Engine---------------------------
         public abstract class Engine
         {
+            private const string k_MaxEnergy = "engine's max energy";
+
+            private const string k_CurrentEnergy = "engine's current energy";
+
+            private const string k_EngineType = "type of engine";
+
             private readonly float m_MaxEnergy;
 
-            private readonly float m_MinEnergy;
+            private const float m_MinEnergy = 0;
 
             private float m_CurrentEnergy;
 
+            private eEngineType m_EngineType;
+
             public enum eEngineType
             {
-                Electric,
+                Electric = 1,
                 Gas
             }
 
-            protected Engine(float i_MaxEnergy)
+            protected Engine(float i_MaxEnergy, eEngineType i_EngineType)
             {
+                m_EngineType = i_EngineType;
                 m_MaxEnergy = i_MaxEnergy;
-                m_MinEnergy = 0;
                 m_CurrentEnergy = 0;
-                addNamesToDictionary();
             }
 
             public float CurrentEnergy
@@ -125,6 +153,10 @@
                 }
                 set
                 {
+                    if (value > MaxEnergy || value < MinEnergy)
+                    {
+                        throw new ValueOutOfRangeException(MinEnergy, MaxEnergy, string.Empty);
+                    }
                     m_CurrentEnergy = value;
                 }
             }
@@ -145,11 +177,26 @@
                 }
             }
 
-            private void addNamesToDictionary()
+            public eEngineType EngineType
             {
-                NamesDictionary.AddName("CurrentEnergy", "current energy");
-                NamesDictionary.AddName("MaxEnergy", "max energy");
-                NamesDictionary.AddName("MinEnergy", "min energy");
+                get
+                {
+                    return m_EngineType;
+                }
+                set
+                {
+                    m_EngineType = value;
+                }
+            }
+
+            public void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
+            {
+                i_Properties.Add(k_CurrentEnergy, PropertyHolder.createPropertyForType<float>(MaxEnergy,MinEnergy));
+            }
+
+            public void SetProperties(Dictionary<string, string> i_Properties)
+            {
+                CurrentEnergy = float.Parse(i_Properties[k_CurrentEnergy]);
             }
 
             public override string ToString()
@@ -173,22 +220,25 @@
         
         public Vehicle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
         {
-            m_Wheels = new List<Wheel>(i_NumberOfWheels);
-            // foreach wheel set maxAirPressure or during the constructor
-
+            m_Wheels = new List<Wheel>();
+            for(int i = 0; i < i_NumberOfWheels; i++)
+            {
+                m_Wheels.Add(new GarageLogic.Vehicle.Wheel(i_MaxAirPressure));
+            }
             m_Engine = i_Engine;
-            addVehicleNamesToDictionary();
         }
 
-        protected abstract void addNamesToDictionary();
-
-        private void addVehicleNamesToDictionary()
+        public string RegistrationNumber
         {
-            NamesDictionary.AddName("RegistrationNum", "registration number");
-            NamesDictionary.AddName("ModelName", "model name");
-            NamesDictionary.AddName("EnergyPercentageLeft", "energy percentage left");
+            get
+            {
+                return m_RegistrationNum;
+            }
+            set
+            {
+                m_RegistrationNum = value;
+            }
         }
-
         public string ModelName
         {
             get
@@ -207,6 +257,10 @@
             {
                 return m_EnergyPercentageLeft;
             }
+            set
+            {
+                m_EnergyPercentageLeft = value;
+            }
         }
 
         public Engine VehicleEngine
@@ -217,14 +271,41 @@
             }
         }
 
-        public List<Wheel> VehicleWheels
+        public Wheel VehicleWheel
         {
             get
             {
-                return m_Wheels;
+                return m_Wheels[0];
+            }
+        }
+        
+
+        public virtual void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
+        {
+            //i_Properties.Add(k_RegistrationNum, PropertyHolder.createPropertyForType<string>());
+            i_Properties.Add(k_ModelName, PropertyHolder.createPropertyForType<string>());
+            VehicleEngine.AddProperties(i_Properties);
+            VehicleWheel.AddProperties(i_Properties);
+        }
+
+        public virtual void SetProperties(Dictionary<string, string> i_Properties)
+        {
+            //m_RegistrationNum = i_Properties[k_RegistrationNum];
+            ModelName = i_Properties[k_ModelName];
+            VehicleEngine.SetProperties(i_Properties);
+            EnergyPercentageLeft = (VehicleEngine.CurrentEnergy / VehicleEngine.MaxEnergy) * 100;
+            foreach (Wheel whl in m_Wheels)
+            {
+                whl.SetProperties(i_Properties);
             }
         }
 
+        public virtual void GetDetails(Dictionary<string,string> i_Details)
+        {
+
+        }
+
+        /*
         protected void setterRangeCheck(int i_Value, int i_MinVal, int i_MaxVal, string i_Name)
         {
             if (i_Value > i_MaxVal || i_Value < i_MinVal)
@@ -255,5 +336,6 @@
 
             return result;
         }
+        */
     }
 }

@@ -1,11 +1,14 @@
-﻿namespace Ex03.GarageLogic
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
+﻿using System;
+using System.Collections.Generic;
 
+namespace Ex03.GarageLogic
+{
     public class Car : Vehicle
     {
+        private const string k_Color = "color";
+
+        private const string k_DoorsAmount = "doors amount";
+
         private eColor m_Color;
 
         private eDoorsAmount m_DoorsAmount;
@@ -13,7 +16,6 @@
         public Car(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
             : base(i_NumberOfWheels, i_MaxAirPressure, i_Engine)
         {
-            addNamesToDictionary();
         }
 
         public eColor Color
@@ -41,28 +43,6 @@
 
         }
 
-        protected override void addNamesToDictionary()
-        {
-            NamesDictionary.AddName("Color", "color");
-            NamesDictionary.AddName("DoorsAmount", "doors amount");
-            NamesDictionary.AddName("Yellow", "yellow");
-            NamesDictionary.AddName("White", "white");
-            NamesDictionary.AddName("Black", "black");
-            NamesDictionary.AddName("Blue", "blue");
-            NamesDictionary.AddName("Two", "two doors");
-            NamesDictionary.AddName("Three", "three doors");
-            NamesDictionary.AddName("Four", "four doors");
-            NamesDictionary.AddName("Five", "five doors");
-        }
-
-        public override List<string> GetAdditionalPropertiesNames()
-        {
-            return new List<string>()
-                {
-                    EnumService.GetAllItems<eColor>("Colors:"), EnumService.GetAllItems<eDoorsAmount>("Doors amount:")
-                };
-        }
-
         public enum eColor
         {
             Yellow = 1,
@@ -79,10 +59,33 @@
             Five
         }
 
-        public override string ToString()
+        public override void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
-            return string.Format("{0} Car", m_Engine.ToString());
+            base.AddProperties(i_Properties);
+            i_Properties.Add(k_Color, PropertyHolder.createPropertyForType<eColor>());
+            i_Properties.Add(k_DoorsAmount, PropertyHolder.createPropertyForType<eDoorsAmount>());
         }
 
+        public override void SetProperties(Dictionary<string, string> i_Properties)
+        {
+            base.SetProperties(i_Properties);
+            Color = (eColor)Enum.Parse(typeof(eColor),i_Properties[k_Color]);
+            DoorsAmount = (eDoorsAmount)Enum.Parse(typeof(eDoorsAmount), i_Properties[k_DoorsAmount]);
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} Car", VehicleEngine.EngineType.ToString());
+        }
+
+        /*
+        public override List<string> GetAdditionalPropertiesNames()
+        {
+            return new List<string>()
+                {
+                    EnumService.GetAllItems<eColor>("Colors:"), EnumService.GetAllItems<eDoorsAmount>("Doors amount:")
+                };
+        }
+        */
     }
 }

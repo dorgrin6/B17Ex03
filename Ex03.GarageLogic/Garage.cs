@@ -13,26 +13,18 @@ namespace Ex03.GarageLogic
             Paid
         }
 
-        public string[] GetGarageVehicleStatus()
-        {
-            return new string[] { "In repair", "Repaired", "Paid" };
-        }
-
         public class VehicleInGarage
         {
-            private string m_OwnerName;
-
-            private string m_OwnerPhoneNumber;
-
-            private eVehicleStatus m_VehicleStatus;
+            private Owner m_Owner;
 
             private Vehicle m_Vehicle;
 
-            public VehicleInGarage(string i_OwnerName, string i_PhoneNum, Vehicle i_Vehicle)
+            private eVehicleStatus m_VehicleStatus;
+
+            public VehicleInGarage(Vehicle i_Vehicle, Owner i_Owner)
             {
-                m_OwnerName = i_OwnerName;
-                m_OwnerPhoneNumber = i_PhoneNum;
                 m_Vehicle = i_Vehicle;
+                m_Owner = i_Owner;
                 m_VehicleStatus = eVehicleStatus.InRepair;
             }
 
@@ -49,7 +41,7 @@ namespace Ex03.GarageLogic
                 }
             }
         }
-
+        /*
         public void InsertVehicle(string i_RegistrationNumber, string i_OwnerName, string i_PhoneNumber, string i_VehicleType)
         {
             VehicleInGarage vehicleInGarage;
@@ -68,6 +60,18 @@ namespace Ex03.GarageLogic
 
             vehicleInGarage = new VehicleInGarage(i_OwnerName, i_PhoneNumber, newVehicle);
             m_Vehicles.Add(i_RegistrationNumber, vehicleInGarage);
+        }
+        */
+
+        public bool isVehicleExistsInGarage(string i_RegistrationNumber)
+        {
+            return m_Vehicles.ContainsKey(i_RegistrationNumber);
+        }
+
+        public void AddVehicleToGarage(string i_RegistrationNumber, Vehicle i_Vehicle, Owner i_Owner)
+        {
+            VehicleInGarage newVehicle = new VehicleInGarage(i_Vehicle, i_Owner);
+            m_Vehicles.Add(i_RegistrationNumber, newVehicle);
         }
 
         public bool TryFindVehicleByRegistration(string i_RegistrationNum, out VehicleInGarage vehicle)

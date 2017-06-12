@@ -1,18 +1,30 @@
-﻿namespace Ex03.GarageLogic
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
+﻿using System;
+using System.Collections.Generic;
 
+namespace Ex03.GarageLogic
+{
     public class Motorcycle : Vehicle
     {
-        public const eRegistrationKind eRegistrationKindMin = eRegistrationKind.A;
+        private const string k_RegistrationKind = "registration kind";
 
-        public const eRegistrationKind eRegistrationKindMax = eRegistrationKind.B1;
+        private const string k_EngineVolume = "engine volume";
 
         private eRegistrationKind m_RegistrationKind;
 
         private int m_EngineVolume;
+
+        public enum eRegistrationKind
+        {
+            A = 1,
+            AB,
+            A2,
+            B1
+        }
+
+        public Motorcycle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
+            : base(i_NumberOfWheels, i_MaxAirPressure, i_Engine)
+        {
+        }
 
         public eRegistrationKind RegistrationKind
         {
@@ -22,7 +34,7 @@
             }
             set
             {
-                setterRangeCheck((int)value,(int)eRegistrationKindMin,(int)eRegistrationKindMax,"Registration kind");
+                //setterRangeCheck((int)value,(int)eRegistrationKindMin,(int)eRegistrationKindMax,"Registration kind");
                 m_RegistrationKind = value;
             }   
         }
@@ -35,26 +47,31 @@
             }
             set
             {
-                setterRangeCheck(value, 0, Int32.MaxValue, "Engine volume");
+                //setterRangeCheck(value, 0, Int32.MaxValue, "Engine volume");
                 m_EngineVolume = value;
             }
         }
 
-
-        public enum eRegistrationKind
+        public override void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
-            A,
-            AB,
-            A2,
-            B1
+            base.AddProperties(i_Properties);
+            i_Properties.Add(k_RegistrationKind, PropertyHolder.createPropertyForType<eRegistrationKind>());
+            i_Properties.Add(k_EngineVolume, PropertyHolder.createPropertyForType<int>());
         }
 
-        public Motorcycle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
-            : base(i_NumberOfWheels, i_MaxAirPressure, i_Engine)
+        public override void SetProperties(Dictionary<string, string> i_Properties)
         {
-            addNamesToDictionary();
+            base.SetProperties(i_Properties);
+            RegistrationKind = (eRegistrationKind)Enum.Parse(typeof(eRegistrationKind), i_Properties[k_RegistrationKind]);
+            EngineVolume = int.Parse(i_Properties[k_EngineVolume]);
         }
 
+        public override string ToString()
+        {
+            return VehicleEngine.EngineType.ToString() + " Motorcycle";
+        }
+
+        /*
         public override List<string> GetAdditionalPropertiesNames()
         {
             return new List<string>()
@@ -63,20 +80,6 @@
                     "Engine volume:"
                 };
         }
-
-        protected override void addNamesToDictionary()
-        {
-            NamesDictionary.AddName("RegistrationKind", "kind or registration");
-            NamesDictionary.AddName("EngineVolume", "engine volume");
-            NamesDictionary.AddName("A", "A");
-            NamesDictionary.AddName("AB", "AB");
-            NamesDictionary.AddName("A2", "A2");
-            NamesDictionary.AddName("B1", "B1");
-        }
-
-        public override string ToString()
-        {
-            return m_Engine.ToString() + " Motorcycle";
-        }
+        */
     }
 }
