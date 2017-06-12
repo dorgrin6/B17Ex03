@@ -12,6 +12,8 @@ namespace Ex03.ConsoleUI
     {
         private readonly Garage m_Garage = new Garage();
 
+        private const string k_BoundaryLine = "-----------------------------";
+
         public enum eInputValidation
         {
             MainMenu,
@@ -36,6 +38,7 @@ namespace Ex03.ConsoleUI
         public void Run()
         {
             string input;
+            bool isRunning = true;
             eMenuOptions userChoice;
             Type type = typeof(eMenuOptions);
 
@@ -44,9 +47,9 @@ namespace Ex03.ConsoleUI
                 showMainMenu();
                 input = getUserInput<Enum>(getEnumMaxValue(type), getEnumMinValue(type), true);
                 userChoice = (eMenuOptions)Enum.Parse(typeof(eMenuOptions), input);
-                handleMainInput(userChoice);
+                isRunning = handleMainInput(userChoice);
             }
-            while (true);
+            while (isRunning);
         }
 
         private void showMainMenu()
@@ -128,8 +131,9 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private void handleMainInput(eMenuOptions userChoice)
+        private bool handleMainInput(eMenuOptions userChoice)
         {
+            bool isRunning = true;
             switch (userChoice)
             {
                 case eMenuOptions.InsertToGarage:
@@ -151,10 +155,16 @@ namespace Ex03.ConsoleUI
                     chargeVehicleEnergy(Engine.eEngineType.Electric);
                     break;
                 case eMenuOptions.ShowAllDetails:
+                    printVehicleDetails();
+                    break;
+                case eMenuOptions.Exit:
+                    Console.WriteLine("GoodBye!");
+                    isRunning = false;
                     break;
                 default:
                     throw new FormatException("Bad menu option selected.");
             }
+            return isRunning;
         }
 
         private void insertVehicleToGarage()
@@ -176,6 +186,7 @@ namespace Ex03.ConsoleUI
                     {
                         Console.WriteLine("The vehicle is already exists in the garage. Please try another registration number.");
                         m_Garage.GetVehicle(inputRegistrationNumber).VehicleStatus = Garage.eVehicleStatus.InRepair;
+                        printBounderyLine();
                     }
                 }
                 while (!isLegalInput);
@@ -183,10 +194,13 @@ namespace Ex03.ConsoleUI
                 m_Garage.AddVehicle(inputRegistrationNumber, newVehicle, newOwner);
                 Console.Clear();
                 Console.WriteLine("Vehicle {0} was added successfully to garage.", inputRegistrationNumber);
+                printBounderyLine();
             }
             catch
             {
+                Console.Clear();
                 Console.WriteLine("Wrong input. Vehicle wasn't added to garage.");
+                printBounderyLine();
             }
 
         }
@@ -402,6 +416,7 @@ namespace Ex03.ConsoleUI
             if (i_RegistrationNumbers.Count == 0)
             {
                 Console.WriteLine("No vehicles were found in the garage which fits the search.");
+                printBounderyLine();
             }
             else
             {
@@ -409,6 +424,7 @@ namespace Ex03.ConsoleUI
                 {
                     Console.WriteLine(registrationNumber);
                 }
+                printBounderyLine();
             }
         }
 
@@ -429,11 +445,13 @@ namespace Ex03.ConsoleUI
                 m_Garage.GetVehicle(registrationNumber).VehicleStatus = status;
                 Console.Clear();
                 Console.WriteLine("Vehicle {0} status was changed to: {1}", registrationNumber, status.ToString());
+                printBounderyLine();
             }
             else
             {
                 Console.Clear();
                 Console.WriteLine("Vehicle wasn't found.");
+                printBounderyLine();
             }
         }
 
@@ -449,11 +467,13 @@ namespace Ex03.ConsoleUI
                 m_Garage.InflateVehicleWheels(registrationNumber);
                 Console.Clear();
                 Console.WriteLine("Vehicle {0} wheel's were inflated to max.", registrationNumber);
+                printBounderyLine();
             }
             else
             {
                 Console.Clear();
                 Console.WriteLine("Vehicle wasn't found.");
+                printBounderyLine();
             }
         }
 
@@ -482,17 +502,20 @@ namespace Ex03.ConsoleUI
                     }
                     Console.Clear();
                     Console.WriteLine("Vehicle {0} was successfully {1}.", registrationNumber, message);
+                    printBounderyLine();
                 }
             }
             catch (ArgumentException)
             {
                 Console.Clear();
                 Console.WriteLine("Wrong input. Type of fuel/charge is not suitable with the vehicle's engine type.");
+                printBounderyLine();
             }
             catch (ValueOutOfRangeException exception)
             {
                 Console.Clear();
                 Console.WriteLine("Wrong input. Amount of energy should be between {0} to {1}.", exception.minValue, exception.maxValue);
+                printBounderyLine();
             }
         }
 
@@ -523,6 +546,7 @@ namespace Ex03.ConsoleUI
                 isVehicleExists = false;
                 Console.Clear();
                 Console.WriteLine("Vehicle wasn't found.");
+                printBounderyLine();
             }
             return isVehicleExists;
         }
@@ -539,7 +563,38 @@ namespace Ex03.ConsoleUI
             return fuel;
         }
 
-        
+        private void printVehicleDetails()
+        {
+            string registrationNumber;
+            Dictionary<string, string> details = new Dictionary<string, string>();
+
+            Console.WriteLine("Please enter a vehicle's registration number:");
+            registrationNumber = getUserInput<string>();
+
+            if (m_Garage.isVehicleExistsInGarage(registrationNumber))
+            {
+                m_Garage.GetVehicleDetails(registrationNumber, details);
+                Console.Clear();
+                foreach (string prop in details.Keys)
+                {
+                    Console.Write("{0}: ", prop);
+                    Console.WriteLine(details[prop]);
+                }
+                printBounderyLine();
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Vehicle wasn't found.");
+                printBounderyLine();
+            }
+
+        }
+
+        private void printBounderyLine()
+        {
+            Console.WriteLine(k_BoundaryLine);
+        }
     }
 }
 

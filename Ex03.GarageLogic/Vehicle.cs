@@ -93,9 +93,9 @@
 
         public virtual void SetProperties(Dictionary<string, string> i_Properties)
         {
-            ModelName = i_Properties[k_ModelName];
+            m_ModelName = i_Properties[k_ModelName];
             VehicleEngine.SetProperties(i_Properties);
-            EnergyPercentageLeft = (VehicleEngine.CurrentEnergy / VehicleEngine.MaxEnergy) * 100;
+            m_EnergyPercentageLeft = (VehicleEngine.CurrentEnergy / VehicleEngine.MaxEnergy) * 100;
             foreach (Wheel wheel in m_Wheels)
             {
                 wheel.SetProperties(i_Properties);
@@ -104,7 +104,17 @@
 
         public virtual void GetDetails(Dictionary<string,string> i_Details)
         {
+            int wheelIndex = 1;
 
+            i_Details.Add(k_RegistrationNum, m_RegistrationNum);
+            i_Details.Add(k_ModelName, m_ModelName);
+            VehicleEngine.GetDetails(i_Details);
+            i_Details.Add(k_EnergyPercentageLeft, m_EnergyPercentageLeft.ToString());
+            foreach(Wheel wheel in m_Wheels)
+            {
+                wheel.GetDetails(i_Details, wheelIndex);
+                wheelIndex++;
+            }
         }
 
         public void InflateWheels()

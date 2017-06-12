@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Ex03.GarageLogic
 {
     public class GasEngine : Engine
     {
+        private const string k_FuelType = "fuel type";
+
         private eFuelType m_FuelType;
 
         public enum eFuelType
@@ -37,7 +40,12 @@ namespace Ex03.GarageLogic
             {
                 throw new ArgumentException();
             }
-            
+        }
+
+        public override void GetDetails(Dictionary<string, string> i_Details)
+        {
+            base.GetDetails(i_Details);
+            i_Details.Add(k_FuelType, m_FuelType.ToString());
         }
 
 

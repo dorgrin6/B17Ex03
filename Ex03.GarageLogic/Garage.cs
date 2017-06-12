@@ -21,6 +21,8 @@ namespace Ex03.GarageLogic
 
         public class VehicleInGarage
         {
+            public const string k_VehicleStatus = "status in garage";
+
             private Owner m_Owner;
 
             private Vehicle m_Vehicle;
@@ -130,6 +132,13 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public void GetVehicleDetails(string i_RegistrationNumber, Dictionary<string,string> i_Details)
+        {
+            m_Vehicles[i_RegistrationNumber].Vehicle.GetDetails(i_Details);
+            m_Vehicles[i_RegistrationNumber].Owner.GetDetails(i_Details);
+            i_Details.Add(VehicleInGarage.k_VehicleStatus, m_Vehicles[i_RegistrationNumber].VehicleStatus.ToString());
+        }
+        /*
         public bool TryGetVehicle(string i_RegistrationNum, out VehicleInGarage vehicle)
         {
             bool result = false;
@@ -142,5 +151,6 @@ namespace Ex03.GarageLogic
 
             return result;
         }
+        */
     }
 }

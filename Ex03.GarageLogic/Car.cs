@@ -78,14 +78,11 @@ namespace Ex03.GarageLogic
             return string.Format("{0} Car", VehicleEngine.EngineType.ToString());
         }
 
-        /*
-        public override List<string> GetAdditionalPropertiesNames()
+        public override void GetDetails(Dictionary<string, string> i_Details)
         {
-            return new List<string>()
-                {
-                    EnumService.GetAllItems<eColor>("Colors:"), EnumService.GetAllItems<eDoorsAmount>("Doors amount:")
-                };
+            base.GetDetails(i_Details);
+            i_Details.Add(k_Color, m_Color.ToString());
+            i_Details.Add(k_DoorsAmount, m_DoorsAmount.ToString());
         }
-        */
     }
 }

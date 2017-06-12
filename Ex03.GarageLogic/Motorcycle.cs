@@ -71,15 +71,11 @@ namespace Ex03.GarageLogic
             return VehicleEngine.EngineType.ToString() + " Motorcycle";
         }
 
-        /*
-        public override List<string> GetAdditionalPropertiesNames()
+        public override void GetDetails(Dictionary<string, string> i_Details)
         {
-            return new List<string>()
-                {
-                    EnumService.GetAllItems<eRegistrationKind>("Registration kind:"),
-                    "Engine volume:"
-                };
+            base.GetDetails(i_Details);
+            i_Details.Add(k_EngineVolume, m_EngineVolume.ToString());
+            i_Details.Add(k_RegistrationKind, m_RegistrationKind.ToString());
         }
-        */
     }
 }

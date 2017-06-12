@@ -102,5 +102,11 @@ namespace Ex03.GarageLogic
         {
         }
 
+        public virtual void GetDetails(Dictionary<string,string> i_Details)
+        {
+            i_Details.Add(k_EngineType, m_EngineType.ToString());
+            i_Details.Add(k_CurrentEnergy, m_CurrentEnergy.ToString());
+            i_Details.Add(k_MaxEnergy, m_MaxEnergy.ToString());
+        }
     }
 }

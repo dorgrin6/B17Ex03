@@ -1,4 +1,7 @@
-﻿namespace Ex03.GarageLogic
+﻿using System;
+using System.Collections.Generic;
+
+namespace Ex03.GarageLogic
 {
     public class ElectricEngine : Engine
     {
@@ -10,6 +13,11 @@
         {
             i_AddEnergy /= 60;
             base.ChargeEnergy(i_AddEnergy);
+        }
+
+        public override void GetDetails(Dictionary<string, string> i_Details)
+        {
+            base.GetDetails(i_Details);
         }
     }
 }

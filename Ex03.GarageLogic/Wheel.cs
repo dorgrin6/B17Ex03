@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Ex03.GarageLogic
 {
@@ -84,6 +85,21 @@ namespace Ex03.GarageLogic
         public void InflateToMax()
         {
             CurrentAirPressure = MaxAirPressure;
+        }
+
+        public void GetDetails(Dictionary<string,string> i_Details, int i_WheelIndex)
+        {
+            StringBuilder wheelNumberAndProperty = new StringBuilder();
+
+            wheelNumberAndProperty.AppendFormat("wheel No.{0} ", i_WheelIndex.ToString());
+            wheelNumberAndProperty.Append(k_Manufacturer);
+            i_Details.Add(wheelNumberAndProperty.ToString(), m_Manufacturer);
+
+            wheelNumberAndProperty.Replace(k_Manufacturer, k_CurrentAirPressure);
+            i_Details.Add(wheelNumberAndProperty.ToString(), m_CurrentAirPressure.ToString());
+
+            wheelNumberAndProperty.Replace(k_CurrentAirPressure, k_MaxAirPressure);
+            i_Details.Add(wheelNumberAndProperty.ToString(), m_MaxAirPressure.ToString());
         }
     }
 }

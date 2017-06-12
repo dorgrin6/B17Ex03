@@ -1,18 +1,17 @@
-﻿namespace Ex03.GarageLogic
+﻿using System;
+using System.Collections.Generic;
+
+namespace Ex03.GarageLogic
 {
     public class Owner
     {
+        private const string k_Name = "owner's name";
+
+        private const string k_PhoneNumber = "owner's phone number";
+
         private string m_Name;
 
         private string m_PhoneNumber;
-
-        /*
-        public Owner(string i_Name, string i_PhoneNumber)
-        {
-            m_Name = i_Name;
-            m_PhoneNumber = i_PhoneNumber;
-        }
-        */
 
         public string Name
         {
@@ -36,6 +35,12 @@
             {
                 m_PhoneNumber = value;
             }
+        }
+
+        public void GetDetails(Dictionary<string,string> i_Details)
+        {
+            i_Details.Add(k_Name, m_Name);
+            i_Details.Add(k_PhoneNumber, m_PhoneNumber);
         }
     }
 }

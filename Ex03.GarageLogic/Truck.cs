@@ -64,11 +64,11 @@ namespace Ex03.GarageLogic
             return "Truck";
         }
 
-        /*
-        public override List<string> GetAdditionalPropertiesNames()
+        public override void GetDetails(Dictionary<string, string> i_Details)
         {
-            return new List<string>() { "Is it carrying hazardous matriels?", "What's the max carrying weight?" };
+            base.GetDetails(i_Details);
+            i_Details.Add(k_IsCarryingHazardousMaterials, m_IsCarryingHazardousMaterials.ToString());
+            i_Details.Add(k_MaxCarryingWeight, m_MaxCarryingWeight.ToString());
         }
-        */
     }
 }

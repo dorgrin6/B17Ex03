@@ -9,6 +9,7 @@ namespace Ex03.ConsoleUI
         {
             UserInterface userInterface = new UserInterface();
             userInterface.Run();
+            Console.ReadKey();
         }
     }
 }
