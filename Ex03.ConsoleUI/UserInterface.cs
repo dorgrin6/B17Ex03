@@ -35,14 +35,15 @@ namespace Ex03.ConsoleUI
 
         public void Run()
         {
+            string input;
             eMenuOptions userChoice;
-            int enumMaxValue, enumMinValue;
+            Type type = typeof(eMenuOptions);
 
             do
             {
                 showMainMenu();
-                getEnumMinMaxValue(typeof(eMenuOptions), out enumMaxValue, out enumMinValue);
-                userChoice = (eMenuOptions)Enum.Parse(typeof(eMenuOptions),getUserInput<Enum>(enumMaxValue,enumMinValue,true));
+                input = getUserInput<Enum>(getEnumMaxValue(type), getEnumMinValue(type), true);
+                userChoice = (eMenuOptions)Enum.Parse(typeof(eMenuOptions), input);
                 handleMainInput(userChoice);
             }
             while (true);
@@ -109,12 +110,12 @@ namespace Ex03.ConsoleUI
         }
 
 
-        private void handleInput<T>(string i_Input, Func<string,T> i_Parse)
+        private void handleInput<T>(string i_Input, Func<string, T> i_Parse)
         {
             handleInput<T>(i_Input, default(float), default(float), false, i_Parse);
         }
 
-        private void handleInput<T>(string i_Input, float i_MaxRange, float i_MinRange, bool i_IsRanged, Func<string,T> i_Parse)
+        private void handleInput<T>(string i_Input, float i_MaxRange, float i_MinRange, bool i_IsRanged, Func<string, T> i_Parse)
         {
             T value;
             IComparable valueComparable;
@@ -135,16 +136,19 @@ namespace Ex03.ConsoleUI
                     insertVehicleToGarage();
                     break;
                 case eMenuOptions.ShowRegistrationNums:
-                    //showRegistrationNums();
+                    showRegistrationNumbers();
                     break;
                 case eMenuOptions.ChangeVechicleStatus:
-                    //changeVehicleStatus();
+                    changeVehicleStatus();
                     break;
                 case eMenuOptions.InflateWheels:
+                    inflateVehicleWheels();
                     break;
                 case eMenuOptions.RefuelGas:
+                    chargeVehicleEnergy(Engine.eEngineType.Gas);
                     break;
                 case eMenuOptions.ChargeElectric:
+                    chargeVehicleEnergy(Engine.eEngineType.Electric);
                     break;
                 case eMenuOptions.ShowAllDetails:
                     break;
@@ -171,36 +175,36 @@ namespace Ex03.ConsoleUI
                     if (isLegalInput == false)
                     {
                         Console.WriteLine("The vehicle is already exists in the garage. Please try another registration number.");
+                        m_Garage.GetVehicle(inputRegistrationNumber).VehicleStatus = Garage.eVehicleStatus.InRepair;
                     }
                 }
                 while (!isLegalInput);
-                getNewVehicleProperties(inputRegistrationNumber, newVehicle, newOwner);
-                m_Garage.AddVehicleToGarage(inputRegistrationNumber, newVehicle, newOwner);
+                getNewVehicleProperties(inputRegistrationNumber, out newVehicle, out newOwner);
+                m_Garage.AddVehicle(inputRegistrationNumber, newVehicle, newOwner);
                 Console.Clear();
-                Console.WriteLine("Vehicle {0} was added successfully to garage.",inputRegistrationNumber);
+                Console.WriteLine("Vehicle {0} was added successfully to garage.", inputRegistrationNumber);
             }
             catch
             {
                 Console.WriteLine("Wrong input. Vehicle wasn't added to garage.");
             }
-            
+
         }
 
-        private void getNewVehicleProperties(string i_RegistrationNumber, Vehicle i_Vehicle, Owner i_Owner)
+        private void getNewVehicleProperties(string i_RegistrationNumber, out Vehicle o_Vehicle, out Owner o_Owner)
         {
             string messageVehicleType = "Please choose the vehicle's type:";
             string inputVehicleType;
-            int enumMinValue, enumMaxValue;
 
             Console.WriteLine(messageVehicleType);
-            Console.WriteLine(createEnumaration(Enum.GetNames(typeof(VehicleFactory.eVehicleType))));
-            getEnumMinMaxValue(typeof(VehicleFactory.eVehicleType), out enumMaxValue, out enumMinValue);
-            inputVehicleType = getUserInput<VehicleFactory.eVehicleType>(enumMaxValue,enumMinValue,true);
-            i_Vehicle = VehicleFactory.GetVehicle((VehicleFactory.eVehicleType)ushort.Parse(inputVehicleType));
-            getAdditionalVehicleProperties(i_RegistrationNumber, i_Vehicle);
-            getAdditionalOwnerDetails(i_Owner);
+            inputVehicleType = getEnumAnswerHelper<VehicleFactory.eVehicleType>();
+            o_Vehicle = VehicleFactory.GetVehicle((VehicleFactory.eVehicleType)ushort.Parse(inputVehicleType));
+            o_Owner = new Owner();
+
+            getAdditionalVehicleProperties(i_RegistrationNumber, o_Vehicle);
+            getAdditionalOwnerDetails(o_Owner);
         }
-        
+
         private void getAdditionalVehicleProperties(string i_RegistrationNumber, Vehicle i_Vehicle)
         {
             Dictionary<string, PropertyHolder> propertiesInfo = new Dictionary<string, PropertyHolder>();
@@ -212,7 +216,7 @@ namespace Ex03.ConsoleUI
             i_Vehicle.SetProperties(propertiesDone);
         }
 
-        private void getVehiclePropertiesFromUser(Dictionary<string,PropertyHolder> i_PropertiesInfo, Dictionary<string,string> i_PropertiesDone)
+        private void getVehiclePropertiesFromUser(Dictionary<string, PropertyHolder> i_PropertiesInfo, Dictionary<string, string> i_PropertiesDone)
         {
             Type typeOfProperty;
             foreach (string prop in i_PropertiesInfo.Keys)
@@ -267,32 +271,48 @@ namespace Ex03.ConsoleUI
         private void getEnumProperty(string i_PropertyName, Dictionary<string, PropertyHolder> i_PropertiesInfo,
             Dictionary<string, string> i_PropertiesDone)
         {
-            int enumMinValue, enumMaxValue;
+            Type type;
+            string input;
+
+            type = i_PropertiesInfo[i_PropertyName].ValueType;
             Console.WriteLine(createEnumaration(i_PropertiesInfo[i_PropertyName].OptionalEnumValues.ToArray()));
-            getEnumMinMaxValue(i_PropertiesInfo[i_PropertyName].ValueType, out enumMaxValue, out enumMinValue);
-            i_PropertiesDone.Add(i_PropertyName, getUserInput<Enum>(enumMaxValue, enumMinValue, true));
+            input = getUserInput<Enum>(getEnumMaxValue(type), getEnumMinValue(type), true);
+            i_PropertiesDone.Add(i_PropertyName, input);
         }
 
-        private void getEnumMinMaxValue(Type i_Enum, out int o_Max, out int o_Min)
+        private string getEnumAnswerHelper<T>()
+        {
+            Type type = typeof(T);
+            string input;
+
+            Console.WriteLine(createEnumaration(Enum.GetNames(type)));
+            input = getUserInput<Enum>(getEnumMaxValue(type), getEnumMinValue(type), true);
+
+            return input;
+        }
+
+        private int getEnumMaxValue(Type i_Enum)
         {
             Array enumValues = Enum.GetValues(i_Enum);
-            o_Min = (int)enumValues.GetValue(0);
-            o_Max = (int)enumValues.GetValue(enumValues.Length - 1);
+            return (int)enumValues.GetValue(enumValues.Length - 1);
         }
-        
+
+        private int getEnumMinValue(Type i_Enum)
+        {
+            Array enumValues = Enum.GetValues(i_Enum);
+            return (int)enumValues.GetValue(0);
+        }
+
         private void getAdditionalOwnerDetails(Owner i_Owner)
         {
             string messageName = "Enter owner's name:";
             string messagePhoneNumber = "Enter owner's phone number:";
-            string ownerName;
-            string ownerPhoneNumber;
 
-            ownerName = getOwnersDetail(messageName, char.IsLetter);
-            ownerPhoneNumber = getOwnersDetail(messagePhoneNumber, char.IsDigit);
-            i_Owner = new Owner(ownerName, ownerPhoneNumber);
+            i_Owner.Name = getOwnersDetail(messageName, char.IsLetter);
+            i_Owner.PhoneNumber = getOwnersDetail(messagePhoneNumber, char.IsDigit);
         }
 
-        private string getOwnersDetail(string i_Message, Func<char,bool> i_checkChar)
+        private string getOwnersDetail(string i_Message, Func<char, bool> i_checkChar)
         {
             string messageWrongInput = "Invalid input. Please try again.";
             string input;
@@ -313,11 +333,11 @@ namespace Ex03.ConsoleUI
             return input;
         }
 
-        private bool isAllLettersOrDigits(string i_Input, Func<char,bool> i_checkChar)
+        private bool isAllLettersOrDigits(string i_Input, Func<char, bool> i_checkChar)
         {
             bool isAllLettersOrDigits = true;
 
-            foreach(char ch in i_Input)
+            foreach (char ch in i_Input)
             {
                 if (!i_checkChar(ch))
                 {
@@ -346,66 +366,180 @@ namespace Ex03.ConsoleUI
             return builder.ToString();
         }
 
-        /*
-        private void showRegistrationNums()
+        private void showRegistrationNumbers()
         {
-            StringBuilder userMessage = 
-                new StringBuilder("In which condition should the vehicles be?");
+            List<string> registrstionNumbers;
+            string input;
+            Garage.eVehicleFilter filter;
+            Garage.eVehicleStatus status;
 
-            string[] status = m_Garage.GetGarageVehicleStatus();
+            Console.WriteLine("Please choose a filter method:");
+            input = getEnumAnswerHelper<Garage.eVehicleFilter>();
+            filter = (Garage.eVehicleFilter)ushort.Parse(input);
 
-            for (int i = 0; i < status.Length; i++)
+            switch (filter)
             {
-                userMessage.AppendFormat("{0}) {1} {2}", Environment.NewLine, i + 1, status[i]);
+                case Garage.eVehicleFilter.All:
+                    registrstionNumbers = m_Garage.GetAllRegistrationNumbers();
+                    break;
+                case Garage.eVehicleFilter.ByStatus:
+                    Console.WriteLine("Please choose a status:");
+                    input = getEnumAnswerHelper<Garage.eVehicleStatus>();
+                    status = (Garage.eVehicleStatus)ushort.Parse(input);
+                    registrstionNumbers = m_Garage.GetRegistrationNumbersByStatus(status);
+                    break;
+                default:
+                    registrstionNumbers = null;
+                    break;
             }
 
-            userMessage.AppendFormat("{0}) All {1}", status.Length, Environment.NewLine);
-
-            string input = getUserInput(eInputValidation.RegistrationScreen, userMessage.ToString());
-
-            // filter by status unless "All" has been selected
-            bool filterByStatus = ushort.Parse(input) != status.Length;
-
-            List<string> registrationNums = 
-                m_Garage.GetRegistrationNums(filterByStatus, (Garage.eVehicleStatus)ushort.Parse(input));
-
-            foreach (string regNum in registrationNums)
-            {
-                Console.WriteLine(regNum);
-            }
+            printRegistrationNumbers(registrstionNumbers);
         }
 
-        
+        private void printRegistrationNumbers(List<string> i_RegistrationNumbers)
+        {
+            Console.Clear();
+            if (i_RegistrationNumbers.Count == 0)
+            {
+                Console.WriteLine("No vehicles were found in the garage which fits the search.");
+            }
+            else
+            {
+                foreach (string registrationNumber in i_RegistrationNumbers)
+                {
+                    Console.WriteLine(registrationNumber);
+                }
+            }
+        }
 
         private void changeVehicleStatus()
         {
-            Garage.VehicleInGarage wantedVehicle = null;
-            string message = @"Please enter the vehicle's registration number:";
+            string registrationNumber;
+            string input;
+            Garage.eVehicleStatus status;
 
-            Console.WriteLine(message);
-            string registrationNum = Console.ReadLine();
+            Console.WriteLine("Please enter a vehicle's registration number:");
+            registrationNumber = getUserInput<string>();
 
-            if (!m_Garage.TryFindVehicleByRegistration(registrationNum, out wantedVehicle))
+            if (m_Garage.isVehicleExistsInGarage(registrationNumber))
             {
-                Console.WriteLine("Given vehicle doesn't exist");
-                return;
+                Console.WriteLine("Please choose a status:");
+                input = getEnumAnswerHelper<Garage.eVehicleStatus>();
+                status = (Garage.eVehicleStatus)ushort.Parse(input);
+                m_Garage.GetVehicle(registrationNumber).VehicleStatus = status;
+                Console.Clear();
+                Console.WriteLine("Vehicle {0} status was changed to: {1}", registrationNumber, status.ToString());
             }
-
-            Console.WriteLine("Please enter the wanted status:");
-            
-            string[] status = m_Garage.GetGarageVehicleStatus();
-
-            for (int i = 0; i < status.Length; i++)
+            else
             {
-                Console.WriteLine("{0}) {1} {2}", Environment.NewLine, i + 1, status[i]);
+                Console.Clear();
+                Console.WriteLine("Vehicle wasn't found.");
             }
-            
-            //TODO: continue here, should get input and change vehicle status
-            //wantedVehicle.VehicleStatus = getUserInput(eInputValidation.ChangeVehicleStatusScreen, String.Empty);
         }
-        */
+
+        private void inflateVehicleWheels()
+        {
+            string registrationNumber;
+
+            Console.WriteLine("Please enter a vehicle's registration number:");
+            registrationNumber = getUserInput<string>();
+
+            if (m_Garage.isVehicleExistsInGarage(registrationNumber))
+            {
+                m_Garage.InflateVehicleWheels(registrationNumber);
+                Console.Clear();
+                Console.WriteLine("Vehicle {0} wheel's were inflated to max.", registrationNumber);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("Vehicle wasn't found.");
+            }
+        }
+
+        private void chargeVehicleEnergy(Engine.eEngineType i_EngineType)
+        {
+            string registrationNumber;
+            float addEnergy;
+            GasEngine.eFuelType fuelType;
+            bool isVehicleExists = true;
+            string message = string.Empty;
+            try
+            {
+                isVehicleExists = getBasicDataForCharging(i_EngineType, out registrationNumber, out addEnergy);
+                if (isVehicleExists)
+                {
+                    if (i_EngineType == Engine.eEngineType.Electric)
+                    {
+                        m_Garage.chargeElectricVehicle(registrationNumber, addEnergy);
+                        message = "cherged";
+                    }
+                    else if (i_EngineType == Engine.eEngineType.Gas)
+                    {
+                        fuelType = getFuelForCharging();
+                        m_Garage.fuelGasVehicle(registrationNumber, addEnergy, fuelType);
+                        message = "fueled";
+                    }
+                    Console.Clear();
+                    Console.WriteLine("Vehicle {0} was successfully {1}.", registrationNumber, message);
+                }
+            }
+            catch (ArgumentException)
+            {
+                Console.Clear();
+                Console.WriteLine("Wrong input. Type of fuel/charge is not suitable with the vehicle's engine type.");
+            }
+            catch (ValueOutOfRangeException exception)
+            {
+                Console.Clear();
+                Console.WriteLine("Wrong input. Amount of energy should be between {0} to {1}.", exception.minValue, exception.maxValue);
+            }
+        }
 
 
+        private bool getBasicDataForCharging(Engine.eEngineType i_EngineType, out string o_RegistrationNumber, out float o_AddEnergy)
+        {
+            string input;
+            o_AddEnergy = default(float);
+            bool isVehicleExists = true;
+
+            Console.WriteLine("Please enter a vehicle's registration number:");
+            o_RegistrationNumber = getUserInput<string>();
+            if (m_Garage.isVehicleExistsInGarage(o_RegistrationNumber))
+            {
+                if (i_EngineType == Engine.eEngineType.Gas)
+                {
+                    Console.WriteLine("Please enter the amount of gas to fuel:");
+                }
+                else if (i_EngineType == Engine.eEngineType.Electric)
+                {
+                    Console.WriteLine("Please enter the amount of electricity to charge:");
+                }
+                input = getUserInput<float>();
+                o_AddEnergy = float.Parse(input);
+            }
+            else
+            {
+                isVehicleExists = false;
+                Console.Clear();
+                Console.WriteLine("Vehicle wasn't found.");
+            }
+            return isVehicleExists;
+        }
+
+        private GasEngine.eFuelType getFuelForCharging()
+        {
+            string input;
+            GasEngine.eFuelType fuel;
+
+            Console.WriteLine("Please enter the type of fuel:");
+            input = getEnumAnswerHelper<GasEngine.eFuelType>();
+            fuel = (GarageLogic.GasEngine.eFuelType)ushort.Parse(input);
+
+            return fuel;
+        }
+
+        
     }
 }
 

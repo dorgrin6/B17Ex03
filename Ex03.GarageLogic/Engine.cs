@@ -1,37 +1,106 @@
-﻿namespace Ex03.GarageLogic
+﻿using System;
+using System.Collections.Generic;
+
+namespace Ex03.GarageLogic
 {
     public abstract class Engine
     {
-        private eEngineType m_Type;
+        private const string k_MaxEnergy = "engine's max energy";
 
-        private float m_CurrentEnergyLevel;
+        private const string k_CurrentEnergy = "engine's current energy";
 
-        private readonly float m_MaxEnergyLevel;
+        private const string k_EngineType = "type of engine";
 
-        protected Engine(eEngineType i_EngineType)
-        {
-            m_Type = i_EngineType;
-        }
+        private readonly float m_MaxEnergy;
 
-        protected abstract void RenewEnergy(float i_Amount);
+        private const float m_MinEnergy = 0;
 
-        public eEngineType Type
-        {
-            get
-            {
-                return m_Type;
-            }
+        private float m_CurrentEnergy;
 
-            set
-            {
-                m_Type = value;
-            }
-        }
+        private eEngineType m_EngineType;
 
         public enum eEngineType
         {
-            Gas,
-            Electric
+            Electric = 1,
+            Gas
         }
+
+        protected Engine(float i_MaxEnergy, eEngineType i_EngineType)
+        {
+            m_EngineType = i_EngineType;
+            m_MaxEnergy = i_MaxEnergy;
+            m_CurrentEnergy = 0;
+        }
+
+        public float CurrentEnergy
+        {
+            get
+            {
+                return m_CurrentEnergy;
+            }
+            set
+            {
+                if (value > MaxEnergy || value < MinEnergy)
+                {
+                    throw new ValueOutOfRangeException(MinEnergy, MaxEnergy, string.Empty);
+                }
+                m_CurrentEnergy = value;
+            }
+        }
+
+        public float MaxEnergy
+        {
+            get
+            {
+                return m_MaxEnergy;
+            }
+        }
+
+        public float MinEnergy
+        {
+            get
+            {
+                return m_MinEnergy;
+            }
+        }
+
+        public eEngineType EngineType
+        {
+            get
+            {
+                return m_EngineType;
+            }
+            set
+            {
+                m_EngineType = value;
+            }
+        }
+
+        public void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
+        {
+            i_Properties.Add(k_CurrentEnergy, PropertyHolder.createPropertyForType<float>(MaxEnergy, MinEnergy));
+        }
+
+        public void SetProperties(Dictionary<string, string> i_Properties)
+        {
+            CurrentEnergy = float.Parse(i_Properties[k_CurrentEnergy]);
+        }
+
+        public virtual void ChargeEnergy(float i_AddEnergy)
+        {
+            if (CurrentEnergy + i_AddEnergy <= MaxEnergy)
+            {
+                CurrentEnergy += i_AddEnergy;
+            }
+            else
+            {
+                throw new ValueOutOfRangeException(MinEnergy, MaxEnergy - CurrentEnergy, string.Empty);
+            }
+        }
+
+        public virtual void RefuelGas(float i_AddEnergy, GasEngine.eFuelType i_FuelType)
+        {
+        }
+
     }
 }

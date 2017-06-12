@@ -42,26 +42,5 @@
 
             return vehicle;
         }
-
-        /*
-        public static bool TryGetNewVehicle(eVehicleType i_VehicleType, out Vehicle i_Vehicle)
-        {
-            i_Vehicle = null;
-            bool result = false;
-
-            // run on all eVehicleType and check for value
-            foreach (eVehicleType type in Enum.GetValues(typeof(eVehicleType)))
-            {
-                if (type == i_VehicleType)
-                {
-                    i_Vehicle = GetVehicle(type);
-                    result = true;
-                    break;
-                }
-            }
-
-            return result;
-        }
-        */
     }
 }

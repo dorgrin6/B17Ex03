@@ -8,9 +8,15 @@ namespace Ex03.GarageLogic
 
         public enum eVehicleStatus
         {
-            InRepair,
+            InRepair = 1,
             Repaired,
             Paid
+        }
+
+        public enum eVehicleFilter
+        {
+            All = 1,
+            ByStatus
         }
 
         public class VehicleInGarage
@@ -40,41 +46,91 @@ namespace Ex03.GarageLogic
                     m_VehicleStatus = value;
                 }
             }
-        }
-        /*
-        public void InsertVehicle(string i_RegistrationNumber, string i_OwnerName, string i_PhoneNumber, string i_VehicleType)
-        {
-            VehicleInGarage vehicleInGarage;
-            if (TryFindVehicleByRegistration(i_RegistrationNumber, out vehicleInGarage))
+
+            public Vehicle Vehicle
             {
-                vehicleInGarage.VehicleStatus = eVehicleStatus.InRepair;
-                throw new ArgumentException("vehicleExists");
-            }
-            // vehicle not found, create new one
-            Vehicle newVehicle;
-            if (!VehicleFactory.TryGetNewVehicle((VehicleFactory.eVehicleType)ushort.Parse(i_VehicleType), out newVehicle))
-            {
-                // should we use this exception?
-                throw new ArgumentException("VechicleTypeNotExists", i_VehicleType);
+                get
+                {
+                    return m_Vehicle;
+                }
             }
 
-            vehicleInGarage = new VehicleInGarage(i_OwnerName, i_PhoneNumber, newVehicle);
-            m_Vehicles.Add(i_RegistrationNumber, vehicleInGarage);
+            public Owner Owner
+            {
+                get
+                {
+                    return m_Owner;
+                }
+            }
         }
-        */
 
         public bool isVehicleExistsInGarage(string i_RegistrationNumber)
         {
             return m_Vehicles.ContainsKey(i_RegistrationNumber);
         }
 
-        public void AddVehicleToGarage(string i_RegistrationNumber, Vehicle i_Vehicle, Owner i_Owner)
+        public void AddVehicle(string i_RegistrationNumber, Vehicle i_Vehicle, Owner i_Owner)
         {
             VehicleInGarage newVehicle = new VehicleInGarage(i_Vehicle, i_Owner);
             m_Vehicles.Add(i_RegistrationNumber, newVehicle);
         }
 
-        public bool TryFindVehicleByRegistration(string i_RegistrationNum, out VehicleInGarage vehicle)
+        public VehicleInGarage GetVehicle(string i_RegistrationNumber)
+        {
+            return m_Vehicles[i_RegistrationNumber];
+        }
+
+        public List<string> GetAllRegistrationNumbers()
+        {
+            return GetRegistrationNumbers(eVehicleFilter.All, default(eVehicleStatus));
+        }
+
+        public List<string> GetRegistrationNumbersByStatus(eVehicleStatus i_Status)
+        {
+            return GetRegistrationNumbers(eVehicleFilter.ByStatus, i_Status);
+        }
+
+        private List<string> GetRegistrationNumbers(eVehicleFilter i_Filter, eVehicleStatus i_Status)
+        {
+            List<string> result = new List<string>();
+            foreach (string registration in m_Vehicles.Keys)
+            {
+                if ((i_Filter == eVehicleFilter.All)||(i_Filter == eVehicleFilter.ByStatus && m_Vehicles[registration].VehicleStatus == i_Status))
+                {
+                    result.Add(registration);
+                }
+            }
+            return result;
+        }
+
+        public void InflateVehicleWheels(string i_RegistrationNumber)
+        {
+            m_Vehicles[i_RegistrationNumber].Vehicle.InflateWheels();
+
+        }
+
+        public void fuelGasVehicle(string i_RegistrationNumber, float i_AddCharge, GasEngine.eFuelType i_FuelType)
+        {
+            checkLegalFuelOrCharge(i_RegistrationNumber, Engine.eEngineType.Gas);
+            m_Vehicles[i_RegistrationNumber].Vehicle.VehicleEngine.RefuelGas(i_AddCharge, i_FuelType);
+        }
+
+        public void chargeElectricVehicle(string i_RegistrationNumber, float i_AddCharge)
+        {
+            checkLegalFuelOrCharge(i_RegistrationNumber, Engine.eEngineType.Electric);
+            m_Vehicles[i_RegistrationNumber].Vehicle.VehicleEngine.ChargeEnergy(i_AddCharge);
+        }
+
+        public void checkLegalFuelOrCharge(string i_RegistrationNumber, Engine.eEngineType i_WantedEngine)
+        {
+            Engine.eEngineType vehicleEngine = m_Vehicles[i_RegistrationNumber].Vehicle.VehicleEngine.EngineType;
+            if (vehicleEngine != i_WantedEngine)
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        public bool TryGetVehicle(string i_RegistrationNum, out VehicleInGarage vehicle)
         {
             bool result = false;
             vehicle = null;
@@ -82,22 +138,6 @@ namespace Ex03.GarageLogic
             if (m_Vehicles.TryGetValue(i_RegistrationNum, out vehicle))
             {
                 result = true;
-            }
-
-            return result;
-        }
-
-        public List<string> GetRegistrationNums(bool filterByStatus, eVehicleStatus status)
-        {
-            List<string> result = new List<string>();
-
-            foreach (KeyValuePair<string, VehicleInGarage> pair in m_Vehicles)
-            {
-                VehicleInGarage currentVehicle = pair.Value;
-                if (!filterByStatus || currentVehicle.VehicleStatus == status)
-                {
-                    result.Add(pair.Key);
-                }
             }
 
             return result;

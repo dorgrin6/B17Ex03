@@ -6,11 +6,13 @@
 
         private string m_PhoneNumber;
 
+        /*
         public Owner(string i_Name, string i_PhoneNumber)
         {
             m_Name = i_Name;
             m_PhoneNumber = i_PhoneNumber;
         }
+        */
 
         public string Name
         {

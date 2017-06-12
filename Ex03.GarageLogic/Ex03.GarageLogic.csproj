@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Car.cs" />
     <Compile Include="ElectricEngine.cs" />
+    <Compile Include="Engine.cs" />
     <Compile Include="EnumService.cs" />
     <Compile Include="GasEngine.cs" />
     <Compile Include="Motorcycle.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="ValueOutOfRangeException.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="VehicleFactory.cs" />
+    <Compile Include="Wheel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
