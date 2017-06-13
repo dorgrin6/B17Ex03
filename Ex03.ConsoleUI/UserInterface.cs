@@ -189,17 +189,17 @@ namespace Ex03.ConsoleUI
                 while (!isLegalInput);
                 getNewVehicleProperties(inputRegistrationNumber, out newVehicle, out newOwner);
                 m_Garage.AddVehicle(inputRegistrationNumber, newVehicle, newOwner);
-                printTitle(
+                printResult(
                     string.Format("Vehicle {0} was added successfully to garage.", inputRegistrationNumber));
             }
             catch
             {
-                printTitle("Wrong input. Vehicle wasn't added to garage.");
+                printResult("Wrong input. Vehicle wasn't added to garage.");
             }
 
         }
 
-        private void printTitle(string i_Title)
+        private void printResult(string i_Title)
         {
             Console.Clear();
             Console.WriteLine(i_Title);

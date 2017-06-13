@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
 namespace Ex03.GarageLogic
-
 {
     public class Garage
     {
@@ -102,7 +101,6 @@ namespace Ex03.GarageLogic
                 {
                     result.Add(registration);
                 }
-
             }
             return result;
         }
