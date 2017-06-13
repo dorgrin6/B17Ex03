@@ -49,7 +49,6 @@
     <Compile Include="Car.cs" />
     <Compile Include="ElectricEngine.cs" />
     <Compile Include="Engine.cs" />
-    <Compile Include="EnumService.cs" />
     <Compile Include="GasEngine.cs" />
     <Compile Include="Motorcycle.cs" />
     <Compile Include="Garage.cs" />

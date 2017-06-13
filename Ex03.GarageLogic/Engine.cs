@@ -11,6 +11,10 @@ namespace Ex03.GarageLogic
 
         private const string k_EngineType = "type of engine";
 
+        private const string k_ChargeAmount = "charge amount";
+
+        public const string k_WrongFuel = "Type of fuel / charge is not suitable with the vehicle's engine type.";
+
         private readonly float m_MaxEnergy;
 
         private const float m_MinEnergy = 0;
@@ -42,7 +46,7 @@ namespace Ex03.GarageLogic
             {
                 if (value > MaxEnergy || value < MinEnergy)
                 {
-                    throw new ValueOutOfRangeException(MinEnergy, MaxEnergy, string.Empty);
+                    throw new ValueOutOfRangeException(MinEnergy, MaxEnergy, k_CurrentEnergy);
                 }
                 m_CurrentEnergy = value;
             }
@@ -86,20 +90,18 @@ namespace Ex03.GarageLogic
             CurrentEnergy = float.Parse(i_Properties[k_CurrentEnergy]);
         }
 
-        public virtual void ChargeEnergy(float i_AddEnergy)
+        public virtual void ChargeEnergy(params string[] i_Params)
         {
-            if (CurrentEnergy + i_AddEnergy <= MaxEnergy)
+            float addEnergy = float.Parse(i_Params[1]);
+
+            if (CurrentEnergy + addEnergy <= MaxEnergy)
             {
-                CurrentEnergy += i_AddEnergy;
+                CurrentEnergy += addEnergy;
             }
             else
             {
-                throw new ValueOutOfRangeException(MinEnergy, MaxEnergy - CurrentEnergy, string.Empty);
+                throw new ValueOutOfRangeException(MinEnergy, MaxEnergy - CurrentEnergy, k_ChargeAmount);
             }
-        }
-
-        public virtual void RefuelGas(float i_AddEnergy, GasEngine.eFuelType i_FuelType)
-        {
         }
 
         public virtual void GetDetails(Dictionary<string,string> i_Details)

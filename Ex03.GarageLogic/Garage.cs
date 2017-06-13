@@ -111,24 +111,18 @@ namespace Ex03.GarageLogic
 
         }
 
-        public void fuelGasVehicle(string i_RegistrationNumber, float i_AddCharge, GasEngine.eFuelType i_FuelType)
+        public void ChargeEnergy(string i_RegistrationNumber, params string[] i_Params)
         {
-            checkLegalFuelOrCharge(i_RegistrationNumber, Engine.eEngineType.Gas);
-            m_Vehicles[i_RegistrationNumber].Vehicle.VehicleEngine.RefuelGas(i_AddCharge, i_FuelType);
-        }
+            Vehicle vehicle = m_Vehicles[i_RegistrationNumber].Vehicle;
+            Engine.eEngineType vehicleEngineType = vehicle.VehicleEngine.EngineType;
 
-        public void chargeElectricVehicle(string i_RegistrationNumber, float i_AddCharge)
-        {
-            checkLegalFuelOrCharge(i_RegistrationNumber, Engine.eEngineType.Electric);
-            m_Vehicles[i_RegistrationNumber].Vehicle.VehicleEngine.ChargeEnergy(i_AddCharge);
-        }
-
-        public void checkLegalFuelOrCharge(string i_RegistrationNumber, Engine.eEngineType i_WantedEngine)
-        {
-            Engine.eEngineType vehicleEngine = m_Vehicles[i_RegistrationNumber].Vehicle.VehicleEngine.EngineType;
-            if (vehicleEngine != i_WantedEngine)
+            if (vehicleEngineType.ToString() == i_Params[0])
             {
-                throw new ArgumentException();
+                vehicle.ChargeEnergy(i_Params);
+            }
+            else
+            {
+                throw new ArgumentException(Engine.k_WrongFuel);
             }
         }
 
@@ -138,19 +132,5 @@ namespace Ex03.GarageLogic
             m_Vehicles[i_RegistrationNumber].Owner.GetDetails(i_Details);
             i_Details.Add(VehicleInGarage.k_VehicleStatus, m_Vehicles[i_RegistrationNumber].VehicleStatus.ToString());
         }
-        /*
-        public bool TryGetVehicle(string i_RegistrationNum, out VehicleInGarage vehicle)
-        {
-            bool result = false;
-            vehicle = null;
-
-            if (m_Vehicles.TryGetValue(i_RegistrationNum, out vehicle))
-            {
-                result = true;
-            }
-
-            return result;
-        }
-        */
     }
 }

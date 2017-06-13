@@ -491,13 +491,13 @@ namespace Ex03.ConsoleUI
                 {
                     if (i_EngineType == Engine.eEngineType.Electric)
                     {
-                        m_Garage.chargeElectricVehicle(registrationNumber, addEnergy);
-                        message = "cherged";
+                        m_Garage.ChargeEnergy(registrationNumber, i_EngineType.ToString(), addEnergy.ToString());
+                        message = "charged";
                     }
                     else if (i_EngineType == Engine.eEngineType.Gas)
                     {
                         fuelType = getFuelForCharging();
-                        m_Garage.fuelGasVehicle(registrationNumber, addEnergy, fuelType);
+                        m_Garage.ChargeEnergy(registrationNumber, i_EngineType.ToString(), addEnergy.ToString(), fuelType.ToString());
                         message = "fueled";
                     }
                     Console.Clear();
@@ -507,12 +507,14 @@ namespace Ex03.ConsoleUI
             }
             catch (ArgumentException)
             {
+                //we should send exceptiom.message
                 Console.Clear();
                 Console.WriteLine("Wrong input. Type of fuel/charge is not suitable with the vehicle's engine type.");
                 printBounderyLine();
             }
             catch (ValueOutOfRangeException exception)
             {
+                //we should send exception.message
                 Console.Clear();
                 Console.WriteLine("Wrong input. Amount of energy should be between {0} to {1}.", exception.minValue, exception.maxValue);
                 printBounderyLine();
@@ -536,7 +538,7 @@ namespace Ex03.ConsoleUI
                 }
                 else if (i_EngineType == Engine.eEngineType.Electric)
                 {
-                    Console.WriteLine("Please enter the amount of electricity to charge:");
+                    Console.WriteLine("Please enter the amount of electricity to charge (in minutes):");
                 }
                 input = getUserInput<float>();
                 o_AddEnergy = float.Parse(input);
