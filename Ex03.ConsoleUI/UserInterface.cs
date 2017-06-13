@@ -3,9 +3,6 @@ using Ex03.GarageLogic;
 namespace Ex03.ConsoleUI
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Security.Policy;
     using System.Text;
 
     public class UserInterface
@@ -54,7 +51,7 @@ namespace Ex03.ConsoleUI
 
         private void showMainMenu()
         {
-            const string mainMenu =
+            const string k_MainMenu =
 @"Choose operation:
 1) Insert a vehicle to garage.
 2) See all registration numbers of vehicle in garage.
@@ -64,7 +61,7 @@ namespace Ex03.ConsoleUI
 6) Charge electric engine of vehicle.
 7) Show All details of vehicle.
 8) Exit.";
-            Console.WriteLine(mainMenu);
+            Console.WriteLine(k_MainMenu);
         }
 
         private string getUserInput<T>()
@@ -192,17 +189,21 @@ namespace Ex03.ConsoleUI
                 while (!isLegalInput);
                 getNewVehicleProperties(inputRegistrationNumber, out newVehicle, out newOwner);
                 m_Garage.AddVehicle(inputRegistrationNumber, newVehicle, newOwner);
-                Console.Clear();
-                Console.WriteLine("Vehicle {0} was added successfully to garage.", inputRegistrationNumber);
-                printBounderyLine();
+                printTitle(
+                    string.Format("Vehicle {0} was added successfully to garage.", inputRegistrationNumber));
             }
             catch
             {
-                Console.Clear();
-                Console.WriteLine("Wrong input. Vehicle wasn't added to garage.");
-                printBounderyLine();
+                printTitle("Wrong input. Vehicle wasn't added to garage.");
             }
 
+        }
+
+        private void printTitle(string i_Title)
+        {
+            Console.Clear();
+            Console.WriteLine(i_Title);
+            printBounderyLine();
         }
 
         private void getNewVehicleProperties(string i_RegistrationNumber, out Vehicle o_Vehicle, out Owner o_Owner)

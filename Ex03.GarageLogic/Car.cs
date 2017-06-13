@@ -24,6 +24,7 @@ namespace Ex03.GarageLogic
             {
                 return m_Color;
             }
+
             set
             {
                 m_Color = value;
@@ -36,11 +37,11 @@ namespace Ex03.GarageLogic
             {
                 return m_DoorsAmount;
             }
+
             set
             {
                 m_DoorsAmount = value;
             }
-
         }
 
         public enum eColor

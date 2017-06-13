@@ -13,7 +13,7 @@ namespace Ex03.GarageLogic
 
         private readonly float m_MaxEnergy;
 
-        private const float m_MinEnergy = 0;
+        private const float k_MinEnergy = 0;
 
         private float m_CurrentEnergy;
 
@@ -38,12 +38,14 @@ namespace Ex03.GarageLogic
             {
                 return m_CurrentEnergy;
             }
+
             set
             {
                 if (value > MaxEnergy || value < MinEnergy)
                 {
                     throw new ValueOutOfRangeException(MinEnergy, MaxEnergy, string.Empty);
                 }
+
                 m_CurrentEnergy = value;
             }
         }
@@ -60,7 +62,7 @@ namespace Ex03.GarageLogic
         {
             get
             {
-                return m_MinEnergy;
+                return k_MinEnergy;
             }
         }
 
@@ -70,6 +72,7 @@ namespace Ex03.GarageLogic
             {
                 return m_EngineType;
             }
+
             set
             {
                 m_EngineType = value;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
 namespace Ex03.GarageLogic
+
 {
     public class Garage
     {
@@ -97,10 +98,11 @@ namespace Ex03.GarageLogic
             List<string> result = new List<string>();
             foreach (string registration in m_Vehicles.Keys)
             {
-                if ((i_Filter == eVehicleFilter.All)||(i_Filter == eVehicleFilter.ByStatus && m_Vehicles[registration].VehicleStatus == i_Status))
+                if ((i_Filter == eVehicleFilter.All) || (i_Filter == eVehicleFilter.ByStatus && m_Vehicles[registration].VehicleStatus == i_Status))
                 {
                     result.Add(registration);
                 }
+
             }
             return result;
         }
