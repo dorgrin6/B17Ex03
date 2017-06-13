@@ -9,10 +9,12 @@ namespace Ex03.GarageLogic
         {
         }
 
-        public override void ChargeEnergy(float i_AddEnergy)
+        public override void ChargeEnergy(params string[] i_Params)
         {
-            i_AddEnergy /= 60;
-            base.ChargeEnergy(i_AddEnergy);
+            float addEnergy = float.Parse(i_Params[1]);
+            addEnergy /= 60;
+            i_Params[1] = addEnergy.ToString();
+            base.ChargeEnergy(i_Params);
         }
 
         public override void GetDetails(Dictionary<string, string> i_Details)

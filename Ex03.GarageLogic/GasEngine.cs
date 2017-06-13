@@ -30,15 +30,15 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public override void RefuelGas(float i_AddEnergy, GasEngine.eFuelType i_FuelType)
+        public override void ChargeEnergy(params string[] i_Params)
         {
-            if (FuelType == i_FuelType)
+            if (FuelType.ToString() == i_Params[2])
             {
-                base.ChargeEnergy(i_AddEnergy);
+                base.ChargeEnergy(i_Params);
             }
             else
             {
-                throw new ArgumentException();
+                throw new ArgumentException(Engine.k_WrongFuel);
             }
         }
 

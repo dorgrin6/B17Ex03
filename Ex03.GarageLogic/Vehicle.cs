@@ -95,7 +95,7 @@
         {
             m_ModelName = i_Properties[k_ModelName];
             VehicleEngine.SetProperties(i_Properties);
-            m_EnergyPercentageLeft = (VehicleEngine.CurrentEnergy / VehicleEngine.MaxEnergy) * 100;
+            CalculateEnergyPercentage();
             foreach (Wheel wheel in m_Wheels)
             {
                 wheel.SetProperties(i_Properties);
@@ -123,6 +123,17 @@
             {
                 wheel.InflateToMax();
             }
+        }
+
+        public void ChargeEnergy(params string[] i_Params)
+        {
+            VehicleEngine.ChargeEnergy(i_Params);
+            CalculateEnergyPercentage();
+        }
+
+        public void CalculateEnergyPercentage()
+        {
+            m_EnergyPercentageLeft = (VehicleEngine.CurrentEnergy / VehicleEngine.MaxEnergy) * 100;
         }
     }
 }
