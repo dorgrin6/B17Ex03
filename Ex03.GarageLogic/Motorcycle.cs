@@ -54,7 +54,6 @@
             get
             {
                 return m_RegistrationKind;
-
             }
 
             set

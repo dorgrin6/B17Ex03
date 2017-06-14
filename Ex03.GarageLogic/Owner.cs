@@ -17,7 +17,6 @@
             get
             {
                 return m_Name;
-
             }
 
             set
@@ -31,7 +30,6 @@
             get
             {
                 return m_PhoneNumber;
-
             }
 
             set

@@ -288,12 +288,13 @@
         {
             if (i_PropertiesInfo[i_PropertyName].isFloatRanged)
             {
-                i_PropertiesDone.Add(
-                    i_PropertyName,
-                    getUserInput<float>(
-                        i_PropertiesInfo[i_PropertyName].MaxFloatValue,
-                        i_PropertiesInfo[i_PropertyName].MinFloatValue,
-                        true));
+                float maxFloatValue = i_PropertiesInfo[i_PropertyName].MaxFloatValue;
+                float minFloatValue = i_PropertiesInfo[i_PropertyName].MinFloatValue;
+                string userInput = getUserInput<float>(
+                        maxFloatValue,
+                        minFloatValue,
+                        true);
+                i_PropertiesDone.Add(i_PropertyName, userInput);
             }
             else
             {
@@ -568,6 +569,7 @@
                     break;
                 }
             }
+
             return isAllLettersOrDigits;
         }
 
@@ -585,13 +587,13 @@
                 Console.WriteLine(k_SearchFail);
                 printBounderyLine();
             }
-
             else
             {
                 foreach (string registrationNumber in i_RegistrationNumbers)
                 {
                     Console.WriteLine(registrationNumber);
                 }
+
                 printBounderyLine();
             }
         }
@@ -619,6 +621,7 @@
                 {
                     detailsResult.AppendLine($"{prop}: {details[prop]}");
                 }
+
                 printResult(detailsResult.ToString());
             }
             else

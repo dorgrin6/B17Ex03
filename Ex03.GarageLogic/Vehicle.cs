@@ -36,7 +36,6 @@
             get
             {
                 return m_EnergyPercentageLeft;
-
             }
 
             set
@@ -50,7 +49,6 @@
             get
             {
                 return m_ModelName;
-
             }
 
             set

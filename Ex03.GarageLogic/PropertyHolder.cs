@@ -67,7 +67,6 @@
             get
             {
                 return m_ValueType;
-
             }
 
             set
