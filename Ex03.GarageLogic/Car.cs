@@ -64,8 +64,8 @@ namespace Ex03.GarageLogic
         public override void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             base.AddProperties(i_Properties);
-            i_Properties.Add(k_Color, PropertyHolder.createPropertyForType<eColor>());
-            i_Properties.Add(k_DoorsAmount, PropertyHolder.createPropertyForType<eDoorsAmount>());
+            i_Properties.Add(k_Color, PropertyHolder.CreatePropertyForType<eColor>());
+            i_Properties.Add(k_DoorsAmount, PropertyHolder.CreatePropertyForType<eDoorsAmount>());
         }
 
         // SetProperties: sets all the properties that were inserted by user.

@@ -29,7 +29,7 @@ namespace Ex03.ConsoleUI
 
         private const float k_MinimumValueForInput = 0;
 
-        private readonly Garage m_Garage = new Garage();
+        private readonly Garage r_Garage = new Garage();
 
         public enum eMenuOptions
         {
@@ -62,12 +62,13 @@ namespace Ex03.ConsoleUI
             eMenuOptions userChoice; // holds the input choice of menu option
             bool isRunning = true; //holds True as long as program running, False if user asks to exit.
             Type type = typeof(eMenuOptions);
+            const bool v_isValueRanged = true;
 
             do
             {
                 showMainMenu();
                 input =
-                    getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), true);
+                    getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), v_isValueRanged);
                 userChoice = (eMenuOptions)Enum.Parse(typeof(eMenuOptions), input);
                 isRunning = handleMainInput(userChoice);
             }
@@ -93,7 +94,9 @@ namespace Ex03.ConsoleUI
         // getUserInput: gets input from user (without special restriction for input range).
         private string getUserInput<T>()
         {
-            return getUserInput<T>(default(float), k_MinimumValueForInput, false);
+            const bool v_IsValueRanged = true;
+
+            return getUserInput<T>(default(float), k_MinimumValueForInput, !v_IsValueRanged);
         }
 
         // getUserInput: gets ipnut from user.
@@ -140,7 +143,9 @@ namespace Ex03.ConsoleUI
         // handleInput: handles the input from user and check if it's legal (without special restriction for input range).
         private void handleInput<T>(T i_Input)
         {
-            handleInput<T>(i_Input, default(float), k_MinimumValueForInput, false);
+            const bool v_IsValueRanged = true;
+
+            handleInput<T>(i_Input, default(float), k_MinimumValueForInput, !v_IsValueRanged);
         }
 
         // handleInput: handles the input from user and check if it's legal.
@@ -198,6 +203,7 @@ namespace Ex03.ConsoleUI
                 default:
                     throw new FormatException("Bad menu option selected.");
             }
+
             return isRunning;
         }
 
@@ -213,16 +219,16 @@ namespace Ex03.ConsoleUI
             try
             {
                 registrastionNumber = Console.ReadLine();
-                isVehicleExists = m_Garage.isVehicleExistsInGarage(registrastionNumber);
+                isVehicleExists = r_Garage.isVehicleExistsInGarage(registrastionNumber);
                 if (isVehicleExists == true) // if vehicle exists in the garage already, we need to set it's status to 'InRepair'.
                 {
-                    m_Garage.GetVehicle(registrastionNumber).VehicleStatus = Garage.eVehicleStatus.InRepair;
+                    r_Garage.GetVehicle(registrastionNumber).VehicleStatus = Garage.eVehicleStatus.InRepair;
                     printResult(k_VehicleExist);
                 }
                 else
                 {
                     getNewVehicleProperties(registrastionNumber, out newVehicle, out newOwner);
-                    m_Garage.AddVehicle(registrastionNumber, newVehicle, newOwner);
+                    r_Garage.AddVehicle(registrastionNumber, newVehicle, newOwner);
                     printResult($"Vehicle {registrastionNumber} was added successfully to garage.");
                 }
             }
@@ -295,11 +301,13 @@ namespace Ex03.ConsoleUI
         private void getFloatProperty(string i_PropertyName, Dictionary<string, PropertyHolder> i_PropertiesInfo,
             Dictionary<string, string> i_PropertiesDone)
         {
+            const bool v_IsValueRanged = true;
+
             if (i_PropertiesInfo[i_PropertyName].isFloatRanged)
             {
                 i_PropertiesDone.Add(
                     i_PropertyName, getUserInput<float>(
-                        i_PropertiesInfo[i_PropertyName].MaxFloatValue, i_PropertiesInfo[i_PropertyName].MinFloatValue, true));
+                        i_PropertiesInfo[i_PropertyName].MaxFloatValue, i_PropertiesInfo[i_PropertyName].MinFloatValue, v_IsValueRanged));
             }
             else
             {
@@ -311,7 +319,7 @@ namespace Ex03.ConsoleUI
         private void getBoolProperty(string i_PropertyName, Dictionary<string, PropertyHolder> i_PropertiesInfo,
             Dictionary<string, string> i_PropertiesDone)
         {
-            Console.WriteLine(k_Enter+" True/False.");
+            Console.WriteLine(k_Enter + " True/False.");
             i_PropertiesDone.Add(i_PropertyName, getUserInput<bool>());
         }
 
@@ -321,10 +329,11 @@ namespace Ex03.ConsoleUI
         {
             Type type;
             string input;
+            const bool v_IsValueRanged = true;
 
             type = i_PropertiesInfo[i_PropertyName].ValueType;
             Console.WriteLine(createEnumaration(i_PropertiesInfo[i_PropertyName].OptionalEnumValues.ToArray()));
-            input = getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), true);
+            input = getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), v_IsValueRanged);
             i_PropertiesDone.Add(i_PropertyName, input);
         }
 
@@ -333,9 +342,10 @@ namespace Ex03.ConsoleUI
         {
             Type type = typeof(T);
             string input;
+            const bool v_IsValueRanged = true;
 
             Console.WriteLine(createEnumaration(Enum.GetNames(type)));
-            input = getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), true);
+            input = getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), v_IsValueRanged);
 
             return input;
         }
@@ -380,7 +390,7 @@ namespace Ex03.ConsoleUI
                 isLegalInput = isAllLettersOrDigits(input, i_Filter);
                 if (!isLegalInput)
                 {
-                    Console.WriteLine(k_WrongInput+ " " + k_TryAgain);
+                    Console.WriteLine(k_WrongInput + " " + k_TryAgain);
                 }
             }
             while (!isLegalInput);
@@ -404,11 +414,13 @@ namespace Ex03.ConsoleUI
                         isAllLettersOrDigits = char.IsDigit(ch);
                         break;
                 }
+
                 if (!isAllLettersOrDigits)
                 {
                     break;
                 }
             }
+
             return isAllLettersOrDigits;
         }
 
@@ -442,17 +454,16 @@ namespace Ex03.ConsoleUI
             Console.WriteLine(k_Enter + " " + Garage.k_Filter + ":");
             input = getEnumAnswerHelper<Garage.eVehicleFilter>();
             filter = (Garage.eVehicleFilter)ushort.Parse(input);
-
             switch (filter)
             {
                 case Garage.eVehicleFilter.All: // prints all vehicles in garage.
-                    registrstionNumbers = m_Garage.GetAllRegistrationNumbers();
+                    registrstionNumbers = r_Garage.GetAllRegistrationNumbers();
                     break;
                 case Garage.eVehicleFilter.ByStatus: // prints only vehicle which fits the status.
                     Console.WriteLine(k_Enter + " " + Garage.VehicleInGarage.k_VehicleStatus + ":");
                     input = getEnumAnswerHelper<Garage.eVehicleStatus>();
                     status = (Garage.eVehicleStatus)ushort.Parse(input);
-                    registrstionNumbers = m_Garage.GetRegistrationNumbersByStatus(status);
+                    registrstionNumbers = r_Garage.GetRegistrationNumbersByStatus(status);
                     break;
                 default:
                     registrstionNumbers = null;
@@ -477,11 +488,12 @@ namespace Ex03.ConsoleUI
                 {
                     Console.WriteLine(registrationNumber);
                 }
+
                 printBounderyLine();
             }
         }
 
-        // changeVehicleStatus: changes vehicle 
+        // changeVehicleStatus: changes vehicle's status in garage.
         private void changeVehicleStatus()
         {
             string registrationNumber;
@@ -490,13 +502,12 @@ namespace Ex03.ConsoleUI
 
             Console.WriteLine(k_Enter+ " " + Vehicle.k_RegistrationNum + ":");
             registrationNumber = getUserInput<string>();
-
-            if (m_Garage.isVehicleExistsInGarage(registrationNumber))
+            if (r_Garage.isVehicleExistsInGarage(registrationNumber))
             {
                 Console.WriteLine(k_Enter + " " + Garage.VehicleInGarage.k_VehicleStatus + ":");
                 input = getEnumAnswerHelper<Garage.eVehicleStatus>();
                 status = (Garage.eVehicleStatus)ushort.Parse(input);
-                m_Garage.GetVehicle(registrationNumber).VehicleStatus = status;
+                r_Garage.GetVehicle(registrationNumber).VehicleStatus = status;
                 printResult($"Vehicle {registrationNumber} status was changed to: {status.ToString()}");
             }
             else
@@ -505,16 +516,16 @@ namespace Ex03.ConsoleUI
             }
         }
 
+        // inflateVehicleWheels: inflates a vehicle's wheels to thier maximum amount of air.
         private void inflateVehicleWheels()
         {
             string registrationNumber;
 
             Console.WriteLine(k_Enter + " " + Vehicle.k_RegistrationNum + ":");
             registrationNumber = getUserInput<string>();
-
-            if (m_Garage.isVehicleExistsInGarage(registrationNumber))
+            if (r_Garage.isVehicleExistsInGarage(registrationNumber))
             {
-                m_Garage.InflateVehicleWheels(registrationNumber);
+                r_Garage.InflateVehicleWheels(registrationNumber);
                 printResult($"Vehicle {registrationNumber} wheel's were inflated to max.");
             }
             else
@@ -523,6 +534,7 @@ namespace Ex03.ConsoleUI
             }
         }
 
+        // chargeVehicleEnergy: charges vehicle's energy, depends on it's engine's type.
         private void chargeVehicleEnergy(Engine.eEngineType i_EngineType)
         {
             string registrationNumber;
@@ -530,6 +542,7 @@ namespace Ex03.ConsoleUI
             GasEngine.eFuelType fuelType;
             bool isVehicleExists = true;
             string message = string.Empty;
+
             try
             {
                 isVehicleExists = getBasicDataForCharging(i_EngineType, out registrationNumber, out addEnergy);
@@ -537,15 +550,16 @@ namespace Ex03.ConsoleUI
                 {
                     if (i_EngineType == Engine.eEngineType.Electric)
                     {
-                        m_Garage.ChargeEnergy(registrationNumber, i_EngineType.ToString(), addEnergy.ToString());
+                        r_Garage.ChargeEnergy(registrationNumber, i_EngineType.ToString(), addEnergy.ToString());
                         message = "charged";
                     }
                     else if (i_EngineType == Engine.eEngineType.Gas)
                     {
                         fuelType = getFuelForCharging();
-                        m_Garage.ChargeEnergy(registrationNumber, i_EngineType.ToString(), addEnergy.ToString(), fuelType.ToString());
+                        r_Garage.ChargeEnergy(registrationNumber, i_EngineType.ToString(), addEnergy.ToString(), fuelType.ToString());
                         message = "fueled";
                     }
+
                     printResult($"Vehicle {registrationNumber} was successfully {message}.");
                 }
             }
@@ -559,7 +573,7 @@ namespace Ex03.ConsoleUI
             }
         }
 
-
+        // getBasicDataForCharging: gets registration number and amount to charge from user.
         private bool getBasicDataForCharging(Engine.eEngineType i_EngineType, out string o_RegistrationNumber, out float o_AddEnergy)
         {
             string input;
@@ -568,7 +582,7 @@ namespace Ex03.ConsoleUI
 
             Console.WriteLine(k_Enter + " " + Vehicle.k_RegistrationNum + ":");
             o_RegistrationNumber = getUserInput<string>();
-            if (m_Garage.isVehicleExistsInGarage(o_RegistrationNumber))
+            if (r_Garage.isVehicleExistsInGarage(o_RegistrationNumber))
             {
                 if (i_EngineType == Engine.eEngineType.Gas)
                 {
@@ -578,6 +592,7 @@ namespace Ex03.ConsoleUI
                 {
                     Console.WriteLine(k_EnterElectricityAmount);
                 }
+
                 input = getUserInput<float>();
                 o_AddEnergy = float.Parse(input);
             }
@@ -586,9 +601,11 @@ namespace Ex03.ConsoleUI
                 isVehicleExists = false;
                 printResult(k_VehicleWasntFound);
             }
+
             return isVehicleExists;
         }
 
+        // getFuelForCharging: gets fuel type from user.
         private GasEngine.eFuelType getFuelForCharging()
         {
             string input;
@@ -601,6 +618,7 @@ namespace Ex03.ConsoleUI
             return fuel;
         }
 
+        // printVehicleDetails: prints all vehicle's details.
         private void printVehicleDetails()
         {
             string registrationNumber;
@@ -609,10 +627,9 @@ namespace Ex03.ConsoleUI
 
             Console.WriteLine(k_Enter + " " + Vehicle.k_RegistrationNum + ":");
             registrationNumber = getUserInput<string>();
-
-            if (m_Garage.isVehicleExistsInGarage(registrationNumber))
+            if (r_Garage.isVehicleExistsInGarage(registrationNumber))
             {
-                m_Garage.GetVehicleDetails(registrationNumber, details);
+                r_Garage.GetVehicleDetails(registrationNumber, details);
                 foreach (string prop in details.Keys)
                 {
                     detailsResult.AppendLine($"{prop}: {details[prop]}");
@@ -623,14 +640,15 @@ namespace Ex03.ConsoleUI
             {
                 printResult(k_VehicleWasntFound);
             }
-
         }
 
+        // printBounderyLine
         private void printBounderyLine()
         {
             Console.WriteLine(k_BoundaryLine);
         }
 
+        // printResult: clears the console, and prints the result of an operation.
         private void printResult(string i_Message)
         {
             Console.Clear();

@@ -12,7 +12,7 @@ namespace Ex03.GarageLogic
 
         private const string k_Manufacturer = "wheel's manufacturer";
 
-        private readonly float m_MaxAirPressure;
+        private readonly float r_MaxAirPressure;
 
         private const float m_MinAirPressure = 0;
 
@@ -22,7 +22,7 @@ namespace Ex03.GarageLogic
 
         public Wheel(float i_MaxAirPressure)
         {
-            m_MaxAirPressure = i_MaxAirPressure;
+            r_MaxAirPressure = i_MaxAirPressure;
             m_CurrentAirPressure = 0;
         }
 
@@ -58,7 +58,7 @@ namespace Ex03.GarageLogic
         {
             get
             {
-                return m_MaxAirPressure;
+                return r_MaxAirPressure;
             }
         }
 
@@ -73,8 +73,8 @@ namespace Ex03.GarageLogic
         // AddProperties: adds all the properties that needs to be inserted by user.
         public void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
-            i_Properties.Add(k_Manufacturer, PropertyHolder.createPropertyForType<string>());
-            i_Properties.Add(k_CurrentAirPressure, PropertyHolder.createPropertyForType<float>(MaxAirPressure, MinAirPressure, true));
+            i_Properties.Add(k_Manufacturer, PropertyHolder.CreatePropertyForType<string>());
+            i_Properties.Add(k_CurrentAirPressure, PropertyHolder.CreatePropertyForType<float>(MaxAirPressure, MinAirPressure));
         }
 
         // SetProperties: sets all the properties that were inserted by user.
@@ -98,7 +98,7 @@ namespace Ex03.GarageLogic
             i_Details.Add(wheelNumberAndProperty.ToString(), m_CurrentAirPressure.ToString());
 
             wheelNumberAndProperty.Replace(k_CurrentAirPressure, k_MaxAirPressure);
-            i_Details.Add(wheelNumberAndProperty.ToString(), m_MaxAirPressure.ToString());
+            i_Details.Add(wheelNumberAndProperty.ToString(), r_MaxAirPressure.ToString());
         }
 
         // InflateToMax: inflate the wheel air amount to max.

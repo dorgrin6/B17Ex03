@@ -9,9 +9,9 @@ namespace Ex03.GarageLogic
 
         private List<string> m_OptionalEnumValues; //holds the type of values property can holds if it is an Enum.
 
-        private float m_MaxFloatValue; //holds the maximum value if the property's value is ranged.
+        private float m_MaxBound; //holds the maximum value if the property's value is ranged.
 
-        private float m_MinFloatValue; //holds the minimum value if the property's value is ranged.
+        private float m_MinBound; //holds the minimum value if the property's value is ranged.
 
         private bool m_IsFloatRanged; //holds True if property's value is ranged, False else.
 
@@ -22,11 +22,11 @@ namespace Ex03.GarageLogic
             m_OptionalEnumValues = new List<string>();
         }
 
-        public PropertyHolder(Type i_ValueType, float i_MaxFloatValue, float i_MinFloatValue)
+        public PropertyHolder(Type i_ValueType, float i_MaxBound, float i_MinBound)
         {
             m_ValueType = i_ValueType;
-            m_MaxFloatValue = i_MaxFloatValue;
-            m_MinFloatValue = i_MinFloatValue;
+            m_MaxBound = i_MaxBound;
+            m_MinBound = i_MinBound;
             m_IsFloatRanged = true;
         }
 
@@ -54,7 +54,7 @@ namespace Ex03.GarageLogic
         {
             get
             {
-                return m_MaxFloatValue;
+                return m_MaxBound;
             }
         }
 
@@ -62,7 +62,7 @@ namespace Ex03.GarageLogic
         {
             get
             {
-                return m_MinFloatValue;
+                return m_MinBound;
             }
         }
 
@@ -74,17 +74,21 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public static PropertyHolder createPropertyForType<T>()
+        public static PropertyHolder CreatePropertyForType<T>()
         {
-            return createPropertyForType<T>(default(float), default(float), false);
+            const bool v_isPropertyValueIsRanged = true;
+
+            return createPropertyForType<T>(default(float), default(float), !v_isPropertyValueIsRanged);
         }
 
-        public static PropertyHolder createPropertyForType<T>(float i_MaxFloat, float i_MinFloat)
+        public static PropertyHolder CreatePropertyForType<T>(float i_MaxBound, float i_MinBound)
         {
-            return createPropertyForType<T>(i_MaxFloat, i_MinFloat, true);
+            const bool v_isPropertyValueIsRanged = true;
+
+            return createPropertyForType<T>(i_MaxBound, i_MinBound, v_isPropertyValueIsRanged);
         }
 
-        public static PropertyHolder createPropertyForType<T>(float i_MaxFloat, float i_MinFloat, bool i_IsFloatRanged)
+        private static PropertyHolder createPropertyForType<T>(float i_MaxBound, float i_MinBound, bool i_IsFloatRanged)
         {
             PropertyHolder property = null;
 
@@ -96,7 +100,7 @@ namespace Ex03.GarageLogic
             {
                 if (i_IsFloatRanged)
                 {
-                    property = new PropertyHolder(typeof(float), i_MaxFloat, i_MinFloat);
+                    property = new PropertyHolder(typeof(float), i_MaxBound, i_MinBound);
                 }
                 else
                 {
@@ -120,7 +124,5 @@ namespace Ex03.GarageLogic
 
             return property;
         }
-
-
     }
 }

@@ -13,6 +13,8 @@ namespace Ex03.GarageLogic
 
         private float m_MaxCarryingWeight;
 
+        private const float k_MinCarryWeight = 0;
+
         public Truck(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
             : base(i_NumberOfWheels, i_MaxAirPressure, i_Engine)
         {
@@ -40,6 +42,10 @@ namespace Ex03.GarageLogic
 
             set
             {
+                if (value < k_MinCarryWeight)
+                {
+                    throw new ValueOutOfRangeException(0, k_MaxCarryingWeight);
+                }
                 m_MaxCarryingWeight = value;
             }
         }
@@ -48,8 +54,8 @@ namespace Ex03.GarageLogic
         public override void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             base.AddProperties(i_Properties);
-            i_Properties.Add(k_IsCarryingHazardousMaterials, PropertyHolder.createPropertyForType<bool>());
-            i_Properties.Add(k_MaxCarryingWeight, PropertyHolder.createPropertyForType<float>());
+            i_Properties.Add(k_IsCarryingHazardousMaterials, PropertyHolder.CreatePropertyForType<bool>());
+            i_Properties.Add(k_MaxCarryingWeight, PropertyHolder.CreatePropertyForType<float>());
         }
 
         // SetProperties: sets all the properties that were inserted by user.

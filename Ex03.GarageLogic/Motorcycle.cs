@@ -13,6 +13,8 @@ namespace Ex03.GarageLogic
 
         private int m_EngineVolume;
 
+        private const int k_MinEngineVolume = 0;
+
         public enum eRegistrationKind
         {
             A = 1,
@@ -46,6 +48,10 @@ namespace Ex03.GarageLogic
             }
             set
             {
+                if (value < k_MinEngineVolume)
+                {
+                    throw new ValueOutOfRangeException(k_MinEngineVolume, k_EngineVolume);
+                }
                 m_EngineVolume = value;
             }
         }
@@ -54,8 +60,8 @@ namespace Ex03.GarageLogic
         public override void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             base.AddProperties(i_Properties);
-            i_Properties.Add(k_RegistrationKind, PropertyHolder.createPropertyForType<eRegistrationKind>());
-            i_Properties.Add(k_EngineVolume, PropertyHolder.createPropertyForType<int>());
+            i_Properties.Add(k_RegistrationKind, PropertyHolder.CreatePropertyForType<eRegistrationKind>());
+            i_Properties.Add(k_EngineVolume, PropertyHolder.CreatePropertyForType<int>());
         }
 
         // SetProperties: sets all the properties that were inserted by user.

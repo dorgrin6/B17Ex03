@@ -86,7 +86,7 @@ namespace Ex03.GarageLogic
         // AddProperties: adds all the properties that needs to be inserted by user.
         public virtual void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
-            i_Properties.Add(k_ModelName, PropertyHolder.createPropertyForType<string>());
+            i_Properties.Add(k_ModelName, PropertyHolder.CreatePropertyForType<string>());
             VehicleEngine.AddProperties(i_Properties);
             VehicleWheel.AddProperties(i_Properties);
         }
@@ -96,7 +96,7 @@ namespace Ex03.GarageLogic
         {
             m_ModelName = i_Properties[k_ModelName];
             VehicleEngine.SetProperties(i_Properties);
-            CalculateEnergyPercentage();
+            calculateEnergyPercentage();
             foreach (Wheel wheel in m_Wheels)
             {
                 wheel.SetProperties(i_Properties);
@@ -104,7 +104,7 @@ namespace Ex03.GarageLogic
         }
 
         // GetDetails: gets all the details about this object properties.
-        public virtual void GetDetails(Dictionary<string,string> i_Details)
+        public virtual void GetDetails(Dictionary<string, string> i_Details)
         {
             int wheelIndex = 1;
 
@@ -132,11 +132,11 @@ namespace Ex03.GarageLogic
         public void ChargeEnergy(params string[] i_Params)
         {
             VehicleEngine.ChargeEnergy(i_Params);
-            CalculateEnergyPercentage();
+            calculateEnergyPercentage();
         }
 
         // CalculateEnergyPercentage: calculates the energy percentage.
-        private void CalculateEnergyPercentage()
+        private void calculateEnergyPercentage()
         {
             m_EnergyPercentageLeft = (VehicleEngine.CurrentEnergy / VehicleEngine.MaxEnergy) * 100;
         }

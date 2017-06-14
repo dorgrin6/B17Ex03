@@ -37,6 +37,7 @@ namespace Ex03.GarageLogic
             }
         }
 
+        // GetDetails: gets all the details about this object properties.
         public void GetDetails(Dictionary<string,string> i_Details)
         {
             i_Details.Add(k_Name, m_Name);

@@ -20,6 +20,7 @@ namespace Ex03.GarageLogic
         public override void ChargeEnergy(params string[] i_Params)
         {
             float addEnergy = float.Parse(i_Params[1]);
+
             addEnergy /= 60;
             i_Params[1] = addEnergy.ToString();
             base.ChargeEnergy(i_Params);

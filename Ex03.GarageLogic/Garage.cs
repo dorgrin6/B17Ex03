@@ -90,17 +90,17 @@ namespace Ex03.GarageLogic
         // GetAllRegistrationNumbers: gets all the vehicle's registration numbers, no matter their vehicle's status.
         public List<string> GetAllRegistrationNumbers()
         {
-            return GetRegistrationNumbers(eVehicleFilter.All, default(eVehicleStatus));
+            return getRegistrationNumbers(eVehicleFilter.All, default(eVehicleStatus));
         }
 
         // GetRegistrationNumbersByStatus: gets all the vehicle's registration numbers who fits the input vehicle status.
         public List<string> GetRegistrationNumbersByStatus(eVehicleStatus i_Status)
         {
-            return GetRegistrationNumbers(eVehicleFilter.ByStatus, i_Status);
+            return getRegistrationNumbers(eVehicleFilter.ByStatus, i_Status);
         }
 
-        // GetRegistrationNumbers: gets all the vehicle's registration numbers who fits the input vehicle status.
-        private List<string> GetRegistrationNumbers(eVehicleFilter i_Filter, eVehicleStatus i_Status)
+        // getRegistrationNumbers: gets all the vehicle's registration numbers who fits the input vehicle status.
+        private List<string> getRegistrationNumbers(eVehicleFilter i_Filter, eVehicleStatus i_Status)
         {
             List<string> result = new List<string>();
             foreach (string registration in m_Vehicles.Keys)
@@ -110,6 +110,7 @@ namespace Ex03.GarageLogic
                     result.Add(registration);
                 }
             }
+
             return result;
         }
 

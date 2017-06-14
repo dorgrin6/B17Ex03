@@ -15,7 +15,7 @@ namespace Ex03.GarageLogic
 
         public const string k_WrongFuel = "Type of fuel / charge is not suitable with the vehicle's engine type.";
 
-        private readonly float m_MaxEnergy;
+        private readonly float r_MaxEnergy;
 
         private const float k_MinEnergy = 0;
 
@@ -32,7 +32,7 @@ namespace Ex03.GarageLogic
         protected Engine(float i_MaxEnergy, eEngineType i_EngineType)
         {
             m_EngineType = i_EngineType;
-            m_MaxEnergy = i_MaxEnergy;
+            r_MaxEnergy = i_MaxEnergy;
             m_CurrentEnergy = 0;
         }
 
@@ -58,7 +58,7 @@ namespace Ex03.GarageLogic
         {
             get
             {
-                return m_MaxEnergy;
+                return r_MaxEnergy;
             }
         }
 
@@ -86,7 +86,7 @@ namespace Ex03.GarageLogic
         // AddProperties: adds all the properties that needs to be inserted by user.
         public void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
-            i_Properties.Add(k_CurrentEnergy, PropertyHolder.createPropertyForType<float>(MaxEnergy, MinEnergy));
+            i_Properties.Add(k_CurrentEnergy, PropertyHolder.CreatePropertyForType<float>(MaxEnergy, MinEnergy));
         }
 
         // SetProperties: sets all the properties that were inserted by user.
@@ -96,11 +96,11 @@ namespace Ex03.GarageLogic
         }
 
         // GetDetails: gets all the details about this object properties.
-        public virtual void GetDetails(Dictionary<string,string> i_Details)
+        public virtual void GetDetails(Dictionary<string, string> i_Details)
         {
             i_Details.Add(k_EngineType, m_EngineType.ToString());
             i_Details.Add(k_CurrentEnergy, m_CurrentEnergy.ToString());
-            i_Details.Add(k_MaxEnergy, m_MaxEnergy.ToString());
+            i_Details.Add(k_MaxEnergy, r_MaxEnergy.ToString());
         }
 
         // ChargeEnergy: charges the engine's energy. gets params as input: Engine type, Amount to charge, Type of fuel.
