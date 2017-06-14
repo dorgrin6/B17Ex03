@@ -1,48 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System.Collections.Generic;
+
     public abstract class Vehicle
     {
         public const string k_RegistrationNum = "registration number";
 
-        private const string k_ModelName = "model name";
-
         private const string k_EnergyPercentageLeft = "energy percentage left";
 
-        private string m_RegistrationNum;
-
-        private string m_ModelName;
+        private const string k_ModelName = "model name";
 
         private float m_EnergyPercentageLeft;
 
         private Engine m_Engine;
 
+        private string m_ModelName;
+
+        private string m_RegistrationNum;
+
         private List<Wheel> m_Wheels;
- 
+
         public Vehicle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
         {
             m_Wheels = new List<Wheel>();
-            for(int i = 0; i < i_NumberOfWheels; i++)
+            for (int i = 0; i < i_NumberOfWheels; i++)
             {
                 m_Wheels.Add(new Wheel(i_MaxAirPressure));
             }
             m_Engine = i_Engine;
         }
 
-        public string RegistrationNumber
+        public float EnergyPercentageLeft
         {
             get
             {
-                return m_RegistrationNum;
+                return m_EnergyPercentageLeft;
             }
             set
             {
-                m_RegistrationNum = value;
+                m_EnergyPercentageLeft = value;
             }
         }
+
         public string ModelName
         {
             get
@@ -55,15 +54,15 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public float EnergyPercentageLeft
+        public string RegistrationNumber
         {
             get
             {
-                return m_EnergyPercentageLeft;
+                return m_RegistrationNum;
             }
             set
             {
-                m_EnergyPercentageLeft = value;
+                m_RegistrationNum = value;
             }
         }
 
@@ -91,16 +90,11 @@ namespace Ex03.GarageLogic
             VehicleWheel.AddProperties(i_Properties);
         }
 
-        // SetProperties: sets all the properties that were inserted by user.
-        public virtual void SetProperties(Dictionary<string, string> i_Properties)
+        // ChargeEnergy: charges the engine's energy and calculates the updated energy percentage.
+        public void ChargeEnergy(params string[] i_Params)
         {
-            m_ModelName = i_Properties[k_ModelName];
-            VehicleEngine.SetProperties(i_Properties);
+            VehicleEngine.ChargeEnergy(i_Params);
             CalculateEnergyPercentage();
-            foreach (Wheel wheel in m_Wheels)
-            {
-                wheel.SetProperties(i_Properties);
-            }
         }
 
         // GetDetails: gets all the details about this object properties.
@@ -112,7 +106,7 @@ namespace Ex03.GarageLogic
             i_Details.Add(k_ModelName, m_ModelName);
             VehicleEngine.GetDetails(i_Details);
             i_Details.Add(k_EnergyPercentageLeft, m_EnergyPercentageLeft.ToString());
-            foreach(Wheel wheel in m_Wheels)
+            foreach (Wheel wheel in m_Wheels)
             {
                 wheel.GetDetails(i_Details, wheelIndex);
                 wheelIndex++;
@@ -128,11 +122,16 @@ namespace Ex03.GarageLogic
             }
         }
 
-        // ChargeEnergy: charges the engine's energy and calculates the updated energy percentage.
-        public void ChargeEnergy(params string[] i_Params)
+        // SetProperties: sets all the properties that were inserted by user.
+        public virtual void SetProperties(Dictionary<string, string> i_Properties)
         {
-            VehicleEngine.ChargeEnergy(i_Params);
+            m_ModelName = i_Properties[k_ModelName];
+            VehicleEngine.SetProperties(i_Properties);
             CalculateEnergyPercentage();
+            foreach (Wheel wheel in m_Wheels)
+            {
+                wheel.SetProperties(i_Properties);
+            }
         }
 
         // CalculateEnergyPercentage: calculates the energy percentage.

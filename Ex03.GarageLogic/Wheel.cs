@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System.Collections.Generic;
+    using System.Text;
+
     public class Wheel
     {
-        private const string k_MaxAirPressure = "wheel's max air pressure";
-
         private const string k_CurrentAirPressure = "wheel's current air pressure";
 
         private const string k_Manufacturer = "wheel's manufacturer";
 
-        private readonly float r_MaxAirPressure;
+        private const string k_MaxAirPressure = "wheel's max air pressure";
 
         private const float m_MinAirPressure = 0;
+
+        private readonly float r_MaxAirPressure;
 
         private float m_CurrentAirPressure;
 
@@ -24,18 +23,6 @@ namespace Ex03.GarageLogic
         {
             r_MaxAirPressure = i_MaxAirPressure;
             m_CurrentAirPressure = 0;
-        }
-
-        public string Manufacturer
-        {
-            get
-            {
-                return m_Manufacturer;
-            }
-            set
-            {
-                m_Manufacturer = value;
-            }
         }
 
         public float CurrentAirPressure
@@ -51,6 +38,18 @@ namespace Ex03.GarageLogic
                     throw new ValueOutOfRangeException(MinAirPressure, MaxAirPressure, k_CurrentAirPressure);
                 }
                 m_CurrentAirPressure = value;
+            }
+        }
+
+        public string Manufacturer
+        {
+            get
+            {
+                return m_Manufacturer;
+            }
+            set
+            {
+                m_Manufacturer = value;
             }
         }
 
@@ -74,14 +73,9 @@ namespace Ex03.GarageLogic
         public void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             i_Properties.Add(k_Manufacturer, PropertyHolder.CreatePropertyForType<string>());
-            i_Properties.Add(k_CurrentAirPressure, PropertyHolder.CreatePropertyForType<float>(MaxAirPressure, MinAirPressure));
-        }
-
-        // SetProperties: sets all the properties that were inserted by user.
-        public void SetProperties(Dictionary<string, string> i_Properties)
-        {
-            Manufacturer = i_Properties[k_Manufacturer];
-            CurrentAirPressure = float.Parse(i_Properties[k_CurrentAirPressure]);
+            i_Properties.Add(
+                k_CurrentAirPressure,
+                PropertyHolder.CreatePropertyForType<float>(MaxAirPressure, MinAirPressure));
         }
 
         // GetDetails: gets all the details about this object properties.
@@ -105,6 +99,13 @@ namespace Ex03.GarageLogic
         public void InflateToMax()
         {
             CurrentAirPressure = MaxAirPressure;
+        }
+
+        // SetProperties: sets all the properties that were inserted by user.
+        public void SetProperties(Dictionary<string, string> i_Properties)
+        {
+            Manufacturer = i_Properties[k_Manufacturer];
+            CurrentAirPressure = float.Parse(i_Properties[k_CurrentAirPressure]);
         }
     }
 }

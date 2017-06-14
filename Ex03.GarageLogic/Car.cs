@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System;
+    using System.Collections.Generic;
+
     public class Car : Vehicle
     {
         private const string k_Color = "color";
@@ -16,6 +16,28 @@ namespace Ex03.GarageLogic
         public Car(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
             : base(i_NumberOfWheels, i_MaxAirPressure, i_Engine)
         {
+        }
+
+        public enum eColor
+        {
+            Yellow = 1,
+
+            White,
+
+            Black,
+
+            Blue
+        }
+
+        public enum eDoorsAmount
+        {
+            Two = 1,
+
+            Three,
+
+            Four,
+
+            Five
         }
 
         public eColor Color
@@ -44,22 +66,6 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public enum eColor
-        {
-            Yellow = 1,
-            White,
-            Black,
-            Blue
-        }
-
-        public enum eDoorsAmount
-        {
-            Two = 1,
-            Three,
-            Four,
-            Five
-        }
-
         // AddProperties: adds all the properties that needs to be inserted by user.
         public override void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
@@ -68,20 +74,20 @@ namespace Ex03.GarageLogic
             i_Properties.Add(k_DoorsAmount, PropertyHolder.CreatePropertyForType<eDoorsAmount>());
         }
 
-        // SetProperties: sets all the properties that were inserted by user.
-        public override void SetProperties(Dictionary<string, string> i_Properties)
-        {
-            base.SetProperties(i_Properties);
-            Color = (eColor)Enum.Parse(typeof(eColor), i_Properties[k_Color]);
-            DoorsAmount = (eDoorsAmount)Enum.Parse(typeof(eDoorsAmount), i_Properties[k_DoorsAmount]);
-        }
-
         // GetDetails: gets all the details about this object properties.
         public override void GetDetails(Dictionary<string, string> i_Details)
         {
             base.GetDetails(i_Details);
             i_Details.Add(k_Color, m_Color.ToString());
             i_Details.Add(k_DoorsAmount, m_DoorsAmount.ToString());
+        }
+
+        // SetProperties: sets all the properties that were inserted by user.
+        public override void SetProperties(Dictionary<string, string> i_Properties)
+        {
+            base.SetProperties(i_Properties);
+            Color = (eColor)Enum.Parse(typeof(eColor), i_Properties[k_Color]);
+            DoorsAmount = (eDoorsAmount)Enum.Parse(typeof(eDoorsAmount), i_Properties[k_DoorsAmount]);
         }
 
         public override string ToString()

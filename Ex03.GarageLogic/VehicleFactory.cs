@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System;
+
     public class VehicleFactory
     {
         public const string k_VehicleType = "type of vehicle";
@@ -10,16 +9,20 @@ namespace Ex03.GarageLogic
         public enum eVehicleType
         {
             GasMotorcycle = 1,
+
             ElectricMotorcycle,
+
             GasCar,
+
             ElectricCar,
+
             Truck
         }
 
         public static Vehicle GetVehicle(eVehicleType i_VehicleType)
         {
             Vehicle vehicle = null;
-            
+
             switch (i_VehicleType)
             {
                 case eVehicleType.GasMotorcycle:

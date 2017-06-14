@@ -6,10 +6,10 @@
  * Delivery Date.........: 14 - June - 2017
  * */
 
-using System;
-using Ex03.GarageLogic;
 namespace Ex03.ConsoleUI
 {
+    using System;
+
     public class Program
     {
         public static void Main()

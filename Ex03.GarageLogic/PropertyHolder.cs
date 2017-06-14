@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System;
+    using System.Collections.Generic;
+
     public class PropertyHolder
     {
-        private Type m_ValueType;
-
-        private List<string> m_OptionalEnumValues; // holds the type of values property can holds if it is an Enum.
+        private bool m_IsFloatRanged; // holds True if property's value is ranged, False else.
 
         private float m_MaxBound; // holds the maximum value if the property's value is ranged.
 
         private float m_MinBound; // holds the minimum value if the property's value is ranged.
 
-        private bool m_IsFloatRanged; // holds True if property's value is ranged, False else.
+        private List<string> m_OptionalEnumValues; // holds the type of values property can holds if it is an Enum.
+
+        private Type m_ValueType;
 
         public PropertyHolder(Type i_ValueType)
         {
@@ -30,23 +30,11 @@ namespace Ex03.GarageLogic
             m_IsFloatRanged = true;
         }
 
-        public Type ValueType
+        public bool isFloatRanged
         {
             get
             {
-                return m_ValueType;
-            }
-            set
-            {
-                m_ValueType = value;
-            }
-        }
-
-        public List<string> OptionalEnumValues
-        {
-            get
-            {
-                return m_OptionalEnumValues;
+                return m_IsFloatRanged;
             }
         }
 
@@ -66,11 +54,23 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public bool isFloatRanged
+        public List<string> OptionalEnumValues
         {
             get
             {
-                return m_IsFloatRanged;
+                return m_OptionalEnumValues;
+            }
+        }
+
+        public Type ValueType
+        {
+            get
+            {
+                return m_ValueType;
+            }
+            set
+            {
+                m_ValueType = value;
             }
         }
 
@@ -105,7 +105,7 @@ namespace Ex03.GarageLogic
                 else
                 {
                     property = new PropertyHolder(typeof(float));
-                }   
+                }
             }
             else if (typeof(T) == typeof(bool))
             {

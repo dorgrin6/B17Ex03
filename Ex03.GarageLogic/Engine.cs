@@ -1,39 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Ex03.GarageLogic
+﻿namespace Ex03.GarageLogic
 {
+    using System.Collections.Generic;
+
     public abstract class Engine
     {
-        private const string k_MaxEnergy = "engine's max energy";
+        public const string k_WrongFuel = "Type of fuel / charge is not suitable with the vehicle's engine type.";
+
+        private const string k_ChargeAmount = "charge amount";
 
         private const string k_CurrentEnergy = "engine's current energy";
 
         private const string k_EngineType = "type of engine";
 
-        private const string k_ChargeAmount = "charge amount";
-
-        public const string k_WrongFuel = "Type of fuel / charge is not suitable with the vehicle's engine type.";
-
-        private readonly float m_MaxEnergy;
+        private const string k_MaxEnergy = "engine's max energy";
 
         private const float k_MinEnergy = 0;
+
+        private readonly float m_MaxEnergy;
 
         private float m_CurrentEnergy;
 
         private eEngineType m_EngineType;
-
-        public enum eEngineType
-        {
-            Electric = 1,
-            Gas
-        }
 
         protected Engine(float i_MaxEnergy, eEngineType i_EngineType)
         {
             m_EngineType = i_EngineType;
             m_MaxEnergy = i_MaxEnergy;
             m_CurrentEnergy = 0;
+        }
+
+        public enum eEngineType
+        {
+            Electric = 1,
+
+            Gas
         }
 
         public float CurrentEnergy
@@ -54,6 +54,19 @@ namespace Ex03.GarageLogic
             }
         }
 
+        public eEngineType EngineType
+        {
+            get
+            {
+                return m_EngineType;
+            }
+
+            set
+            {
+                m_EngineType = value;
+            }
+        }
+
         public float MaxEnergy
         {
             get
@@ -70,37 +83,10 @@ namespace Ex03.GarageLogic
             }
         }
 
-        public eEngineType EngineType
-        {
-            get
-            {
-                return m_EngineType;
-            }
-
-            set
-            {
-                m_EngineType = value;
-            }
-        }
-
         // AddProperties: adds all the properties that needs to be inserted by user.
         public void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             i_Properties.Add(k_CurrentEnergy, PropertyHolder.CreatePropertyForType<float>(MaxEnergy, MinEnergy));
-        }
-
-        // SetProperties: sets all the properties that were inserted by user.
-        public void SetProperties(Dictionary<string, string> i_Properties)
-        {
-            CurrentEnergy = float.Parse(i_Properties[k_CurrentEnergy]);
-        }
-
-        // GetDetails: gets all the details about this object properties.
-        public virtual void GetDetails(Dictionary<string, string> i_Details)
-        {
-            i_Details.Add(k_EngineType, m_EngineType.ToString());
-            i_Details.Add(k_CurrentEnergy, m_CurrentEnergy.ToString());
-            i_Details.Add(k_MaxEnergy, m_MaxEnergy.ToString());
         }
 
         // ChargeEnergy: charges the engine's energy. gets params as input: Engine type, Amount to charge, Type of fuel.
@@ -116,6 +102,20 @@ namespace Ex03.GarageLogic
             {
                 throw new ValueOutOfRangeException(MinEnergy, MaxEnergy - CurrentEnergy, k_ChargeAmount);
             }
+        }
+
+        // GetDetails: gets all the details about this object properties.
+        public virtual void GetDetails(Dictionary<string, string> i_Details)
+        {
+            i_Details.Add(k_EngineType, m_EngineType.ToString());
+            i_Details.Add(k_CurrentEnergy, m_CurrentEnergy.ToString());
+            i_Details.Add(k_MaxEnergy, m_MaxEnergy.ToString());
+        }
+
+        // SetProperties: sets all the properties that were inserted by user.
+        public void SetProperties(Dictionary<string, string> i_Properties)
+        {
+            CurrentEnergy = float.Parse(i_Properties[k_CurrentEnergy]);
         }
     }
 }
