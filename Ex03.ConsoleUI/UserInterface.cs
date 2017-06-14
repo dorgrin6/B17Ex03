@@ -11,7 +11,7 @@ namespace Ex03.ConsoleUI
 
         private const string k_SearchFail = "No vehicles were found in the garage which fits the search.";
 
-        private const string k_VehicleExistFail = "The vehicle is already exists in the garage. Please try another registration number.";
+        private const string k_VehicleExist = "The vehicle is already exists in the garage. It's status changed to InRepair.";
 
         private const string k_AddFail = "Vehicle wasn't added to garage.";
 
@@ -49,23 +49,32 @@ namespace Ex03.ConsoleUI
             AllDigits
         }
 
+        public enum eEnumBounds
+        {
+            Max,
+            Min
+        }
+
+        // Run: runs the program.
         public void Run()
         {
-            string input;
-            bool isRunning = true;
-            eMenuOptions userChoice;
+            string input; //holds user's input
+            eMenuOptions userChoice; // holds the input choice of menu option
+            bool isRunning = true; //holds True as long as program running, False if user asks to exit.
             Type type = typeof(eMenuOptions);
 
             do
             {
                 showMainMenu();
-                input = getUserInput<Enum>(getEnumMaxValue(type), getEnumMinValue(type), true);
+                input =
+                    getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), true);
                 userChoice = (eMenuOptions)Enum.Parse(typeof(eMenuOptions), input);
                 isRunning = handleMainInput(userChoice);
             }
             while (isRunning);
         }
 
+        // showMainMenu: prints the main menu to console.
         private void showMainMenu()
         {
             const string k_MainMenu =
@@ -81,15 +90,18 @@ namespace Ex03.ConsoleUI
             Console.WriteLine(k_MainMenu);
         }
 
+        // getUserInput: gets input from user (without special restriction for input range).
         private string getUserInput<T>()
         {
             return getUserInput<T>(default(float), k_MinimumValueForInput, false);
         }
 
+        // getUserInput: gets ipnut from user.
         private string getUserInput<T>(float i_MaxRange, float i_MinRange, bool i_IsRanged)
         {
             string input;
             bool isLegalInput;
+
             do
             {
                 isLegalInput = true;
@@ -125,12 +137,13 @@ namespace Ex03.ConsoleUI
             return input;
         }
 
-
+        // handleInput: handles the input from user and check if it's legal (without special restriction for input range).
         private void handleInput<T>(T i_Input)
         {
             handleInput<T>(i_Input, default(float), k_MinimumValueForInput, false);
         }
 
+        // handleInput: handles the input from user and check if it's legal.
         private void handleInput<T>(T i_Input, float i_MaxRange, float i_MinRange, bool i_IsRanged)
         {
             IComparable valueComparable;
@@ -148,9 +161,9 @@ namespace Ex03.ConsoleUI
             {
                 throw new ValueOutOfRangeException(i_MinRange, "Input");
             }
-
         }
 
+        // handleMainInput: handles the main menu input and preform an menu's option.
         private bool handleMainInput(eMenuOptions userChoice)
         {
             bool isRunning = true;
@@ -188,31 +201,30 @@ namespace Ex03.ConsoleUI
             return isRunning;
         }
 
+        // insertVehicleToGarage: inserts a new vehicle to garage.
         private void insertVehicleToGarage()
         {
-            string registrastionNumber;
-            bool isLegalInput = true;
+            string registrastionNumber; // holds new vehicle's registration number.
+            bool isVehicleExists = true;
             Vehicle newVehicle = null;
             Owner newOwner = null;
 
             Console.WriteLine(k_Enter + " " + Vehicle.k_RegistrationNum + ":");
             try
             {
-                do
+                registrastionNumber = Console.ReadLine();
+                isVehicleExists = m_Garage.isVehicleExistsInGarage(registrastionNumber);
+                if (isVehicleExists == true) // if vehicle exists in the garage already, we need to set it's status to 'InRepair'.
                 {
-                    registrastionNumber = Console.ReadLine();
-                    isLegalInput = !(m_Garage.isVehicleExistsInGarage(registrastionNumber));
-                    if (isLegalInput == false)
-                    {
-                        Console.WriteLine(k_VehicleExistFail);
-                        m_Garage.GetVehicle(registrastionNumber).VehicleStatus = Garage.eVehicleStatus.InRepair;
-                        printBounderyLine();
-                    }
+                    m_Garage.GetVehicle(registrastionNumber).VehicleStatus = Garage.eVehicleStatus.InRepair;
+                    printResult(k_VehicleExist);
                 }
-                while (!isLegalInput);
-                getNewVehicleProperties(registrastionNumber, out newVehicle, out newOwner);
-                m_Garage.AddVehicle(registrastionNumber, newVehicle, newOwner);
-                printResult($"Vehicle {registrastionNumber} was added successfully to garage.");
+                else
+                {
+                    getNewVehicleProperties(registrastionNumber, out newVehicle, out newOwner);
+                    m_Garage.AddVehicle(registrastionNumber, newVehicle, newOwner);
+                    printResult($"Vehicle {registrastionNumber} was added successfully to garage.");
+                }
             }
             catch
             {
@@ -220,7 +232,8 @@ namespace Ex03.ConsoleUI
             }
 
         }
-
+        
+        // getNewVehicleProperties: gets new vehicle's and owner's properties.
         private void getNewVehicleProperties(string i_RegistrationNumber, out Vehicle o_Vehicle, out Owner o_Owner)
         {
             string inputVehicleType;
@@ -231,9 +244,10 @@ namespace Ex03.ConsoleUI
             o_Owner = new Owner();
 
             getAdditionalVehicleProperties(i_RegistrationNumber, o_Vehicle);
-            getAdditionalOwnerDetails(o_Owner);
+            getAdditionalOwnerProperties(o_Owner);
         }
 
+        // getAdditionalVehicleProperties: gets additional vehicle's properties.
         private void getAdditionalVehicleProperties(string i_RegistrationNumber, Vehicle i_Vehicle)
         {
             Dictionary<string, PropertyHolder> propertiesInfo = new Dictionary<string, PropertyHolder>();
@@ -245,9 +259,11 @@ namespace Ex03.ConsoleUI
             i_Vehicle.SetProperties(propertiesDone);
         }
 
+        // getVehiclePropertiesFromUser: gets additional vehicle's properties from user.
         private void getVehiclePropertiesFromUser(Dictionary<string, PropertyHolder> i_PropertiesInfo, Dictionary<string, string> i_PropertiesDone)
         {
             Type typeOfProperty;
+
             foreach (string prop in i_PropertiesInfo.Keys)
             {
                 Console.WriteLine(k_Enter + " " + prop + ":");
@@ -275,6 +291,7 @@ namespace Ex03.ConsoleUI
             }
         }
 
+        // getFloatProperty: handles with Float type property input.
         private void getFloatProperty(string i_PropertyName, Dictionary<string, PropertyHolder> i_PropertiesInfo,
             Dictionary<string, string> i_PropertiesDone)
         {
@@ -290,6 +307,7 @@ namespace Ex03.ConsoleUI
             }
         }
 
+        // getBoolProperty: handles with Bool type property input.
         private void getBoolProperty(string i_PropertyName, Dictionary<string, PropertyHolder> i_PropertiesInfo,
             Dictionary<string, string> i_PropertiesDone)
         {
@@ -297,6 +315,7 @@ namespace Ex03.ConsoleUI
             i_PropertiesDone.Add(i_PropertyName, getUserInput<bool>());
         }
 
+        // getEnumProperty: handles with Enum type property input.
         private void getEnumProperty(string i_PropertyName, Dictionary<string, PropertyHolder> i_PropertiesInfo,
             Dictionary<string, string> i_PropertiesDone)
         {
@@ -305,40 +324,50 @@ namespace Ex03.ConsoleUI
 
             type = i_PropertiesInfo[i_PropertyName].ValueType;
             Console.WriteLine(createEnumaration(i_PropertiesInfo[i_PropertyName].OptionalEnumValues.ToArray()));
-            input = getUserInput<Enum>(getEnumMaxValue(type), getEnumMinValue(type), true);
+            input = getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), true);
             i_PropertiesDone.Add(i_PropertyName, input);
         }
 
+        // getEnumAnswerHelper: handles with Enum type property input, when Enum is known during compilation.
         private string getEnumAnswerHelper<T>()
         {
             Type type = typeof(T);
             string input;
 
             Console.WriteLine(createEnumaration(Enum.GetNames(type)));
-            input = getUserInput<Enum>(getEnumMaxValue(type), getEnumMinValue(type), true);
+            input = getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), true);
 
             return input;
         }
 
-        private int getEnumMaxValue(Type i_Enum)
+        // getEnumBound: gets Enum bounds value. return max value or minimum.
+        private int getEnumBound(Type i_Enum, eEnumBounds i_BoundType)
         {
+            int result = 0;
             Array enumValues = Enum.GetValues(i_Enum);
-            return (int)enumValues.GetValue(enumValues.Length - 1);
+
+            switch (i_BoundType)
+            {
+                case eEnumBounds.Max:
+                    result = (int)enumValues.GetValue(enumValues.Length - 1);
+                    break;
+                case eEnumBounds.Min:
+                    result = (int)enumValues.GetValue(0);
+                    break;
+            }
+
+            return result;
         }
 
-        private int getEnumMinValue(Type i_Enum)
+        // getAdditionalOwnerProperties: gets additional owner's properties.
+        private void getAdditionalOwnerProperties(Owner i_Owner)
         {
-            Array enumValues = Enum.GetValues(i_Enum);
-            return (int)enumValues.GetValue(0);
+            i_Owner.Name = getOwnerProperty(k_Enter+ " " +Owner.k_Name, eStringFilter.AllLetters);
+            i_Owner.PhoneNumber = getOwnerProperty(k_Enter + " " + Owner.k_PhoneNumber, eStringFilter.AllDigits);
         }
 
-        private void getAdditionalOwnerDetails(Owner i_Owner)
-        {
-            i_Owner.Name = getOwnersDetail(k_Enter+ " " +Owner.k_Name, eStringFilter.AllLetters);
-            i_Owner.PhoneNumber = getOwnersDetail(k_Enter + " " + Owner.k_PhoneNumber, eStringFilter.AllDigits);
-        }
-
-        private string getOwnersDetail(string i_Message, eStringFilter i_Filter)
+        // getOwnerProperty: gets one property of owner each time, which fits it's filter.
+        private string getOwnerProperty(string i_Message, eStringFilter i_Filter)
         {
             string input;
             bool isLegalInput;
@@ -359,6 +388,7 @@ namespace Ex03.ConsoleUI
             return input;
         }
 
+        // isAllLettersOrDigits: return True if all chars are letter or digits, depends on filter.
         private bool isAllLettersOrDigits(string i_Input, eStringFilter i_Filter)
         {
             bool isAllLettersOrDigits = true;
@@ -382,6 +412,7 @@ namespace Ex03.ConsoleUI
             return isAllLettersOrDigits;
         }
 
+        // createEnumaration: prints Enum values to console.
         private string createEnumaration(string[] i_Enumarte)
         {
             StringBuilder builder = new StringBuilder();
@@ -400,6 +431,7 @@ namespace Ex03.ConsoleUI
             return builder.ToString();
         }
 
+        // showRegistrationNumbers: prints garage's vehcile's registration numbers.
         private void showRegistrationNumbers()
         {
             List<string> registrstionNumbers;
@@ -413,10 +445,10 @@ namespace Ex03.ConsoleUI
 
             switch (filter)
             {
-                case Garage.eVehicleFilter.All:
+                case Garage.eVehicleFilter.All: // prints all vehicles in garage.
                     registrstionNumbers = m_Garage.GetAllRegistrationNumbers();
                     break;
-                case Garage.eVehicleFilter.ByStatus:
+                case Garage.eVehicleFilter.ByStatus: // prints only vehicle which fits the status.
                     Console.WriteLine(k_Enter + " " + Garage.VehicleInGarage.k_VehicleStatus + ":");
                     input = getEnumAnswerHelper<Garage.eVehicleStatus>();
                     status = (Garage.eVehicleStatus)ushort.Parse(input);
@@ -430,6 +462,7 @@ namespace Ex03.ConsoleUI
             printRegistrationNumbers(registrstionNumbers);
         }
 
+        // printRegistrationNumbers: prints list of registration numbers.
         private void printRegistrationNumbers(List<string> i_RegistrationNumbers)
         {
             Console.Clear();
@@ -448,6 +481,7 @@ namespace Ex03.ConsoleUI
             }
         }
 
+        // changeVehicleStatus: changes vehicle 
         private void changeVehicleStatus()
         {
             string registrationNumber;
