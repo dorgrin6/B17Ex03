@@ -18,7 +18,7 @@
 
         private string m_RegistrationNum;
 
-        private List<Wheel> m_Wheels;
+        private readonly List<Wheel> m_Wheels;
 
         public Vehicle(ushort i_NumberOfWheels, float i_MaxAirPressure, Engine i_Engine)
         {
