@@ -97,7 +97,7 @@
             Console.WriteLine(k_Enter + " " + Vehicle.k_RegistrationNum + ":");
             registrationNumber = getUserInput<string>();
 
-            if (m_Garage.isVehicleExistsInGarage(registrationNumber))
+            if (m_Garage.IsVehicleExistsInGarage(registrationNumber))
             {
                 Console.WriteLine(k_Enter + " " + Garage.VehicleInGarage.k_VehicleStatus + ":");
                 input = getEnumAnswerHelper<Garage.eVehicleStatus>();
@@ -201,7 +201,7 @@
 
             Console.WriteLine(k_Enter + " " + Vehicle.k_RegistrationNum + ":");
             o_RegistrationNumber = getUserInput<string>();
-            if (m_Garage.isVehicleExistsInGarage(o_RegistrationNumber))
+            if (m_Garage.IsVehicleExistsInGarage(o_RegistrationNumber))
             {
                 if (i_EngineType == Engine.eEngineType.Gas)
                 {
@@ -503,7 +503,7 @@
             Console.WriteLine(k_Enter + " " + Vehicle.k_RegistrationNum + ":");
             registrationNumber = getUserInput<string>();
 
-            if (m_Garage.isVehicleExistsInGarage(registrationNumber))
+            if (m_Garage.IsVehicleExistsInGarage(registrationNumber))
             {
                 m_Garage.InflateVehicleWheels(registrationNumber);
                 printResult($"Vehicle {registrationNumber} wheel's were inflated to max.");
@@ -526,7 +526,7 @@
             try
             {
                 registrastionNumber = Console.ReadLine();
-                isVehicleExists = m_Garage.isVehicleExistsInGarage(registrastionNumber);
+                isVehicleExists = m_Garage.IsVehicleExistsInGarage(registrastionNumber);
                 
                 // if vehicle exists in the garage already, we need to set it's status to 'InRepair'.
                 if (isVehicleExists == true)
@@ -614,7 +614,7 @@
             Console.WriteLine(k_Enter + " " + Vehicle.k_RegistrationNum + ":");
             registrationNumber = getUserInput<string>();
 
-            if (m_Garage.isVehicleExistsInGarage(registrationNumber))
+            if (m_Garage.IsVehicleExistsInGarage(registrationNumber))
             {
                 m_Garage.GetVehicleDetails(registrationNumber, details);
                 foreach (string prop in details.Keys)

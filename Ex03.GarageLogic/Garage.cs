@@ -7,7 +7,7 @@
     {
         public const string k_Filter = "filer method";
 
-        private Dictionary<string, VehicleInGarage> m_Vehicles = new Dictionary<string, VehicleInGarage>();
+        private readonly Dictionary<string, VehicleInGarage> m_Vehicles = new Dictionary<string, VehicleInGarage>();
 
         public enum eVehicleFilter
         {
@@ -80,8 +80,8 @@
             m_Vehicles[i_RegistrationNumber].Vehicle.InflateWheels();
         }
 
-        // isVehicleExistsInGarage: return True if the vehicle is in garage, False else.
-        public bool isVehicleExistsInGarage(string i_RegistrationNumber)
+        // IsVehicleExistsInGarage: return True if the vehicle is in garage, False else.
+        public bool IsVehicleExistsInGarage(string i_RegistrationNumber)
         {
             return m_Vehicles.ContainsKey(i_RegistrationNumber);
         }
