@@ -2,8 +2,16 @@
 using Ex03.GarageLogic;
 namespace Ex03.ConsoleUI
 {
+    using System.CodeDom;
     using System.Collections.Generic;
     using System.Text;
+
+    public enum eEnumBounds
+    {
+        Max,
+
+        Min
+    }
 
     public class UserInterface
     {
@@ -42,7 +50,8 @@ namespace Ex03.ConsoleUI
             do
             {
                 showMainMenu();
-                input = getUserInput<Enum>(getEnumMaxValue(type), getEnumMinValue(type), true);
+                input = 
+                    getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), true);
                 userChoice = (eMenuOptions)Enum.Parse(typeof(eMenuOptions), input);
                 isRunning = handleMainInput(userChoice);
             }
@@ -291,7 +300,8 @@ namespace Ex03.ConsoleUI
 
             type = i_PropertiesInfo[i_PropertyName].ValueType;
             Console.WriteLine(createEnumaration(i_PropertiesInfo[i_PropertyName].OptionalEnumValues.ToArray()));
-            input = getUserInput<Enum>(getEnumMaxValue(type), getEnumMinValue(type), true);
+            input =
+                 getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), true);
             i_PropertiesDone.Add(i_PropertyName, input);
         }
 
@@ -301,11 +311,31 @@ namespace Ex03.ConsoleUI
             string input;
 
             Console.WriteLine(createEnumaration(Enum.GetNames(type)));
-            input = getUserInput<Enum>(getEnumMaxValue(type), getEnumMinValue(type), true);
+            input = 
+                getUserInput<Enum>(getEnumBound(type, eEnumBounds.Max), getEnumBound(type, eEnumBounds.Min), true);
 
             return input;
         }
 
+        private int getEnumBound(Type i_Enum, eEnumBounds i_BoundType)
+        {
+            int result = 0;
+            Array enumValues = Enum.GetValues(i_Enum);
+
+            switch (i_BoundType)
+            {
+                case eEnumBounds.Max:
+                    result = (int)enumValues.GetValue(enumValues.Length - 1);
+                    break;
+                case eEnumBounds.Min:
+                    result = (int)enumValues.GetValue(0);
+                    break;
+            }
+
+            return result;
+        }
+
+        /*
         private int getEnumMaxValue(Type i_Enum)
         {
             Array enumValues = Enum.GetValues(i_Enum);
@@ -317,6 +347,7 @@ namespace Ex03.ConsoleUI
             Array enumValues = Enum.GetValues(i_Enum);
             return (int)enumValues.GetValue(0);
         }
+        */
 
         private void getAdditionalOwnerDetails(Owner i_Owner)
         {
