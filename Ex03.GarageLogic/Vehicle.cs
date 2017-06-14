@@ -1,12 +1,12 @@
-﻿namespace Ex03.GarageLogic
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
+namespace Ex03.GarageLogic
+{
     public abstract class Vehicle
     {
-        private const string k_RegistrationNum = "registration number";
+        public const string k_RegistrationNum = "registration number";
 
         private const string k_ModelName = "model name";
 
@@ -82,8 +82,8 @@
                 return m_Wheels[0];
             }
         }
-        
 
+        // AddProperties: adds all the properties that needs to be inserted by user.
         public virtual void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             i_Properties.Add(k_ModelName, PropertyHolder.createPropertyForType<string>());
@@ -91,6 +91,7 @@
             VehicleWheel.AddProperties(i_Properties);
         }
 
+        // SetProperties: sets all the properties that were inserted by user.
         public virtual void SetProperties(Dictionary<string, string> i_Properties)
         {
             m_ModelName = i_Properties[k_ModelName];
@@ -102,6 +103,7 @@
             }
         }
 
+        // GetDetails: gets all the details about this object properties.
         public virtual void GetDetails(Dictionary<string,string> i_Details)
         {
             int wheelIndex = 1;
@@ -117,6 +119,7 @@
             }
         }
 
+        // InflateWheels: infalets the wheels to their maximum about of air.
         public void InflateWheels()
         {
             foreach (Wheel wheel in m_Wheels)
@@ -125,13 +128,15 @@
             }
         }
 
+        // ChargeEnergy: charges the engine's energy and calculates the updated energy percentage.
         public void ChargeEnergy(params string[] i_Params)
         {
             VehicleEngine.ChargeEnergy(i_Params);
             CalculateEnergyPercentage();
         }
 
-        public void CalculateEnergyPercentage()
+        // CalculateEnergyPercentage: calculates the energy percentage.
+        private void CalculateEnergyPercentage()
         {
             m_EnergyPercentageLeft = (VehicleEngine.CurrentEnergy / VehicleEngine.MaxEnergy) * 100;
         }

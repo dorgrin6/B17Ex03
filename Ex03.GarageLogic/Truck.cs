@@ -40,11 +40,11 @@ namespace Ex03.GarageLogic
 
             set
             {
-                //setterRangeCheck((int)value,0,int.MaxValue,"Max carry weight");
                 m_MaxCarryingWeight = value;
             }
         }
 
+        // AddProperties: adds all the properties that needs to be inserted by user.
         public override void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             base.AddProperties(i_Properties);
@@ -52,6 +52,7 @@ namespace Ex03.GarageLogic
             i_Properties.Add(k_MaxCarryingWeight, PropertyHolder.createPropertyForType<float>());
         }
 
+        // SetProperties: sets all the properties that were inserted by user.
         public override void SetProperties(Dictionary<string, string> i_Properties)
         {
             base.SetProperties(i_Properties);
@@ -59,16 +60,17 @@ namespace Ex03.GarageLogic
             MaxCarryingWeight = float.Parse(i_Properties[k_MaxCarryingWeight]);
         }
 
-        public override string ToString()
-        {
-            return "Truck";
-        }
-
+        // GetDetails: gets all the details about this object properties.
         public override void GetDetails(Dictionary<string, string> i_Details)
         {
             base.GetDetails(i_Details);
             i_Details.Add(k_IsCarryingHazardousMaterials, m_IsCarryingHazardousMaterials.ToString());
             i_Details.Add(k_MaxCarryingWeight, m_MaxCarryingWeight.ToString());
+        }
+
+        public override string ToString()
+        {
+            return "Truck";
         }
     }
 }

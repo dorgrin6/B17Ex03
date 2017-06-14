@@ -1,10 +1,12 @@
-﻿namespace Ex03.GarageLogic
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+namespace Ex03.GarageLogic
+{
     public class VehicleFactory
     {
+        public const string k_VehicleType = "type of vehicle";
+
         public enum eVehicleType
         {
             GasMotorcycle = 1,
@@ -32,12 +34,11 @@
                 case eVehicleType.ElectricCar:
                     vehicle = new Car(4, 30, new ElectricEngine(2.5f));
                     break;
-
                 case eVehicleType.Truck:
                     vehicle = new Truck(12, 42, new GasEngine(GasEngine.eFuelType.Octan96, 135));
                     break;
                 default:
-                    throw new ArgumentException(string.Format("Vehicle {0} isn't supported!", i_VehicleType));
+                    throw new ArgumentException($"Vehicle {i_VehicleType} isn't supported!");
             }
 
             return vehicle;

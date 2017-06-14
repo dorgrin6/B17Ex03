@@ -60,6 +60,7 @@ namespace Ex03.GarageLogic
             Five
         }
 
+        // AddProperties: adds all the properties that needs to be inserted by user.
         public override void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             base.AddProperties(i_Properties);
@@ -67,6 +68,7 @@ namespace Ex03.GarageLogic
             i_Properties.Add(k_DoorsAmount, PropertyHolder.createPropertyForType<eDoorsAmount>());
         }
 
+        // SetProperties: sets all the properties that were inserted by user.
         public override void SetProperties(Dictionary<string, string> i_Properties)
         {
             base.SetProperties(i_Properties);
@@ -74,16 +76,17 @@ namespace Ex03.GarageLogic
             DoorsAmount = (eDoorsAmount)Enum.Parse(typeof(eDoorsAmount), i_Properties[k_DoorsAmount]);
         }
 
-        public override string ToString()
-        {
-            return string.Format("{0} Car", VehicleEngine.EngineType.ToString());
-        }
-
+        // GetDetails: gets all the details about this object properties.
         public override void GetDetails(Dictionary<string, string> i_Details)
         {
             base.GetDetails(i_Details);
             i_Details.Add(k_Color, m_Color.ToString());
             i_Details.Add(k_DoorsAmount, m_DoorsAmount.ToString());
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0} Car", VehicleEngine.EngineType.ToString());
         }
     }
 }

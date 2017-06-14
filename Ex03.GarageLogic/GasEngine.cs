@@ -5,7 +5,7 @@ namespace Ex03.GarageLogic
 {
     public class GasEngine : Engine
     {
-        private const string k_FuelType = "fuel type";
+        public const string k_FuelType = "type of fuel";
 
         private eFuelType m_FuelType;
 
@@ -30,6 +30,14 @@ namespace Ex03.GarageLogic
             }
         }
 
+        // GetDetails: gets all the details about this object properties.
+        public override void GetDetails(Dictionary<string, string> i_Details)
+        {
+            base.GetDetails(i_Details);
+            i_Details.Add(k_FuelType, m_FuelType.ToString());
+        }
+
+        // ChargeEnergy: charges the engine's energy. gets params as input: Engine type, Amount to charge, Type of fuel.
         public override void ChargeEnergy(params string[] i_Params)
         {
             if (FuelType.ToString() == i_Params[2])
@@ -41,13 +49,5 @@ namespace Ex03.GarageLogic
                 throw new ArgumentException(Engine.k_WrongFuel);
             }
         }
-
-        public override void GetDetails(Dictionary<string, string> i_Details)
-        {
-            base.GetDetails(i_Details);
-            i_Details.Add(k_FuelType, m_FuelType.ToString());
-        }
-
-
     }
 }

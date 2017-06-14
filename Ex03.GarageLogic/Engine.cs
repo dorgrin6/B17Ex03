@@ -83,16 +83,27 @@ namespace Ex03.GarageLogic
             }
         }
 
+        // AddProperties: adds all the properties that needs to be inserted by user.
         public void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             i_Properties.Add(k_CurrentEnergy, PropertyHolder.createPropertyForType<float>(MaxEnergy, MinEnergy));
         }
 
+        // SetProperties: sets all the properties that were inserted by user.
         public void SetProperties(Dictionary<string, string> i_Properties)
         {
             CurrentEnergy = float.Parse(i_Properties[k_CurrentEnergy]);
         }
 
+        // GetDetails: gets all the details about this object properties.
+        public virtual void GetDetails(Dictionary<string,string> i_Details)
+        {
+            i_Details.Add(k_EngineType, m_EngineType.ToString());
+            i_Details.Add(k_CurrentEnergy, m_CurrentEnergy.ToString());
+            i_Details.Add(k_MaxEnergy, m_MaxEnergy.ToString());
+        }
+
+        // ChargeEnergy: charges the engine's energy. gets params as input: Engine type, Amount to charge, Type of fuel.
         public virtual void ChargeEnergy(params string[] i_Params)
         {
             float addEnergy = float.Parse(i_Params[1]);
@@ -105,13 +116,6 @@ namespace Ex03.GarageLogic
             {
                 throw new ValueOutOfRangeException(MinEnergy, MaxEnergy - CurrentEnergy, k_ChargeAmount);
             }
-        }
-
-        public virtual void GetDetails(Dictionary<string,string> i_Details)
-        {
-            i_Details.Add(k_EngineType, m_EngineType.ToString());
-            i_Details.Add(k_CurrentEnergy, m_CurrentEnergy.ToString());
-            i_Details.Add(k_MaxEnergy, m_MaxEnergy.ToString());
         }
     }
 }

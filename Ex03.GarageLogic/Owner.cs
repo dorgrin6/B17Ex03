@@ -5,9 +5,9 @@ namespace Ex03.GarageLogic
 {
     public class Owner
     {
-        private const string k_Name = "owner's name";
+        public const string k_Name = "owner's name";
 
-        private const string k_PhoneNumber = "owner's phone number";
+        public const string k_PhoneNumber = "owner's phone number";
 
         private string m_Name;
 

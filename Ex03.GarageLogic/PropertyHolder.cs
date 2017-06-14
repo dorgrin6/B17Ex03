@@ -1,19 +1,19 @@
-﻿namespace Ex03.GarageLogic
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+namespace Ex03.GarageLogic
+{
     public class PropertyHolder
     {
         private Type m_ValueType;
 
-        private List<string> m_OptionalEnumValues;
+        private List<string> m_OptionalEnumValues; //holds the type of values property can holds if it is an Enum.
 
-        private float m_MaxFloatValue;
+        private float m_MaxFloatValue; //holds the maximum value if the property's value is ranged.
 
-        private float m_MinFloatValue;
+        private float m_MinFloatValue; //holds the minimum value if the property's value is ranged.
 
-        private bool m_IsFloatRanged;
+        private bool m_IsFloatRanged; //holds True if property's value is ranged, False else.
 
         public PropertyHolder(Type i_ValueType)
         {

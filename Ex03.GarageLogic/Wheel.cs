@@ -48,7 +48,7 @@ namespace Ex03.GarageLogic
             {
                 if (value > MaxAirPressure || value < MinAirPressure)
                 {
-                    throw new ValueOutOfRangeException(MinAirPressure, MaxAirPressure, string.Empty);
+                    throw new ValueOutOfRangeException(MinAirPressure, MaxAirPressure, k_CurrentAirPressure);
                 }
                 m_CurrentAirPressure = value;
             }
@@ -70,24 +70,23 @@ namespace Ex03.GarageLogic
             }
         }
 
+        // AddProperties: adds all the properties that needs to be inserted by user.
         public void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             i_Properties.Add(k_Manufacturer, PropertyHolder.createPropertyForType<string>());
             i_Properties.Add(k_CurrentAirPressure, PropertyHolder.createPropertyForType<float>(MaxAirPressure, MinAirPressure, true));
         }
 
+        // SetProperties: sets all the properties that were inserted by user.
         public void SetProperties(Dictionary<string, string> i_Properties)
         {
             Manufacturer = i_Properties[k_Manufacturer];
             CurrentAirPressure = float.Parse(i_Properties[k_CurrentAirPressure]);
         }
 
-        public void InflateToMax()
-        {
-            CurrentAirPressure = MaxAirPressure;
-        }
-
-        public void GetDetails(Dictionary<string,string> i_Details, int i_WheelIndex)
+        // GetDetails: gets all the details about this object properties.
+        //NOTE: pay attention that the method gets also the wheel's index in it's vehicle.
+        public void GetDetails(Dictionary<string, string> i_Details, int i_WheelIndex)
         {
             StringBuilder wheelNumberAndProperty = new StringBuilder();
 
@@ -100,6 +99,12 @@ namespace Ex03.GarageLogic
 
             wheelNumberAndProperty.Replace(k_CurrentAirPressure, k_MaxAirPressure);
             i_Details.Add(wheelNumberAndProperty.ToString(), m_MaxAirPressure.ToString());
+        }
+
+        // InflateToMax: inflate the wheel air amount to max.
+        public void InflateToMax()
+        {
+            CurrentAirPressure = MaxAirPressure;
         }
     }
 }

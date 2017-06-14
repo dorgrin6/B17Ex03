@@ -29,5 +29,11 @@ namespace Ex03.GarageLogic
             m_MinValue = i_MinValue;
             m_MaxValue = i_MaxValue;
         }
+
+        public ValueOutOfRangeException(float i_MinValue, string i_ValueName)
+            : base(String.Format("{0} should be bigger or equal to {1}.", i_ValueName, i_MinValue))
+        {
+            m_MinValue = i_MinValue;
+        }
     }
 }

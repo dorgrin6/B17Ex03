@@ -34,7 +34,6 @@ namespace Ex03.GarageLogic
             }
             set
             {
-                //setterRangeCheck((int)value,(int)eRegistrationKindMin,(int)eRegistrationKindMax,"Registration kind");
                 m_RegistrationKind = value;
             }   
         }
@@ -47,11 +46,11 @@ namespace Ex03.GarageLogic
             }
             set
             {
-                //setterRangeCheck(value, 0, Int32.MaxValue, "Engine volume");
                 m_EngineVolume = value;
             }
         }
 
+        // AddProperties: adds all the properties that needs to be inserted by user.
         public override void AddProperties(Dictionary<string, PropertyHolder> i_Properties)
         {
             base.AddProperties(i_Properties);
@@ -59,6 +58,7 @@ namespace Ex03.GarageLogic
             i_Properties.Add(k_EngineVolume, PropertyHolder.createPropertyForType<int>());
         }
 
+        // SetProperties: sets all the properties that were inserted by user.
         public override void SetProperties(Dictionary<string, string> i_Properties)
         {
             base.SetProperties(i_Properties);
@@ -66,16 +66,17 @@ namespace Ex03.GarageLogic
             EngineVolume = int.Parse(i_Properties[k_EngineVolume]);
         }
 
-        public override string ToString()
-        {
-            return VehicleEngine.EngineType.ToString() + " Motorcycle";
-        }
-
+        // GetDetails: gets all the details about this object properties.
         public override void GetDetails(Dictionary<string, string> i_Details)
         {
             base.GetDetails(i_Details);
             i_Details.Add(k_EngineVolume, m_EngineVolume.ToString());
             i_Details.Add(k_RegistrationKind, m_RegistrationKind.ToString());
+        }
+
+        public override string ToString()
+        {
+            return VehicleEngine.EngineType.ToString() + " Motorcycle";
         }
     }
 }
