@@ -31,12 +31,14 @@
             {
                 return m_CurrentAirPressure;
             }
+
             set
             {
                 if (value > MaxAirPressure || value < MinAirPressure)
                 {
                     throw new ValueOutOfRangeException(MinAirPressure, MaxAirPressure, k_CurrentAirPressure);
                 }
+
                 m_CurrentAirPressure = value;
             }
         }
@@ -47,6 +49,7 @@
             {
                 return m_Manufacturer;
             }
+
             set
             {
                 m_Manufacturer = value;

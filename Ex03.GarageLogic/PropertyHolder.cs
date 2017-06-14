@@ -67,7 +67,9 @@
             get
             {
                 return m_ValueType;
+
             }
+
             set
             {
                 m_ValueType = value;

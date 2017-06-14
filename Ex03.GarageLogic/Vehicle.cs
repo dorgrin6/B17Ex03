@@ -27,6 +27,7 @@
             {
                 m_Wheels.Add(new Wheel(i_MaxAirPressure));
             }
+
             m_Engine = i_Engine;
         }
 
@@ -35,7 +36,9 @@
             get
             {
                 return m_EnergyPercentageLeft;
+
             }
+
             set
             {
                 m_EnergyPercentageLeft = value;
@@ -47,7 +50,9 @@
             get
             {
                 return m_ModelName;
+
             }
+
             set
             {
                 m_ModelName = value;
@@ -60,6 +65,7 @@
             {
                 return m_RegistrationNum;
             }
+
             set
             {
                 m_RegistrationNum = value;

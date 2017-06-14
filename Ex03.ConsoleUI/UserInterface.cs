@@ -138,6 +138,7 @@
                             fuelType.ToString());
                         message = "fueled";
                     }
+
                     printResult($"Vehicle {registrationNumber} was successfully {message}.");
                 }
             }
@@ -210,6 +211,7 @@
                 {
                     Console.WriteLine(k_EnterElectricityAmount);
                 }
+
                 input = getUserInput<float>();
                 o_AddEnergy = float.Parse(input);
             }
@@ -218,6 +220,7 @@
                 isVehicleExists = false;
                 printResult(k_VehicleWasntFound);
             }
+
             return isVehicleExists;
         }
 
@@ -488,6 +491,7 @@
                 default:
                     throw new FormatException("Bad menu option selected.");
             }
+
             return isRunning;
         }
 
@@ -522,6 +526,7 @@
             {
                 registrastionNumber = Console.ReadLine();
                 isVehicleExists = m_Garage.isVehicleExistsInGarage(registrastionNumber);
+                
                 // if vehicle exists in the garage already, we need to set it's status to 'InRepair'.
                 if (isVehicleExists == true)
                 {
@@ -557,6 +562,7 @@
                         isAllLettersOrDigits = char.IsDigit(ch);
                         break;
                 }
+
                 if (!isAllLettersOrDigits)
                 {
                     break;
@@ -579,6 +585,7 @@
                 Console.WriteLine(k_SearchFail);
                 printBounderyLine();
             }
+
             else
             {
                 foreach (string registrationNumber in i_RegistrationNumbers)

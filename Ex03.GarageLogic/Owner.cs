@@ -17,7 +17,9 @@
             get
             {
                 return m_Name;
+
             }
+
             set
             {
                 m_Name = value;
@@ -29,7 +31,9 @@
             get
             {
                 return m_PhoneNumber;
+
             }
+
             set
             {
                 m_PhoneNumber = value;

@@ -37,12 +37,14 @@
             {
                 return m_EngineVolume;
             }
+
             set
             {
                 if (value < k_MinEngineVolume)
                 {
                     throw new ValueOutOfRangeException(k_MinEngineVolume, k_EngineVolume);
                 }
+
                 m_EngineVolume = value;
             }
         }
@@ -52,7 +54,9 @@
             get
             {
                 return m_RegistrationKind;
+
             }
+
             set
             {
                 m_RegistrationKind = value;

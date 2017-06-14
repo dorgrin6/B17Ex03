@@ -45,6 +45,7 @@
                 {
                     throw new ValueOutOfRangeException(0, k_MaxCarryingWeight);
                 }
+
                 m_MaxCarryingWeight = value;
             }
         }
