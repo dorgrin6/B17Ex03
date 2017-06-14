@@ -7,7 +7,7 @@
     {
         public const string k_Filter = "filer method";
 
-        private readonly Dictionary<string, VehicleInGarage> m_Vehicles = new Dictionary<string, VehicleInGarage>();
+        private readonly Dictionary<string, VehicleInGarage> r_Vehicles = new Dictionary<string, VehicleInGarage>();
 
         public enum eVehicleFilter
         {
@@ -29,13 +29,13 @@
         public void AddVehicle(string i_RegistrationNumber, Vehicle i_Vehicle, Owner i_Owner)
         {
             VehicleInGarage newVehicle = new VehicleInGarage(i_Vehicle, i_Owner);
-            m_Vehicles.Add(i_RegistrationNumber, newVehicle);
+            r_Vehicles.Add(i_RegistrationNumber, newVehicle);
         }
 
         // ChargeEnergy: charges vehicle's engine's energy. gets params as input: Engine type, Amount to charge, Type of fuel.
         public void ChargeEnergy(string i_RegistrationNumber, params string[] i_Params)
         {
-            Vehicle vehicle = m_Vehicles[i_RegistrationNumber].Vehicle;
+            Vehicle vehicle = r_Vehicles[i_RegistrationNumber].Vehicle;
             Engine.eEngineType vehicleEngineType = vehicle.VehicleEngine.EngineType;
 
             if (vehicleEngineType.ToString() == i_Params[0])
@@ -63,37 +63,37 @@
         // GetVehicle: gets a vehicle from the garage, by its registration number.
         public VehicleInGarage GetVehicle(string i_RegistrationNumber)
         {
-            return m_Vehicles[i_RegistrationNumber];
+            return r_Vehicles[i_RegistrationNumber];
         }
 
         // GetVehicleDetails: gets all the details about a vehicle & owner properties.
         public void GetVehicleDetails(string i_RegistrationNumber, Dictionary<string, string> i_Details)
         {
-            m_Vehicles[i_RegistrationNumber].Vehicle.GetDetails(i_Details);
-            m_Vehicles[i_RegistrationNumber].Owner.GetDetails(i_Details);
-            i_Details.Add(VehicleInGarage.k_VehicleStatus, m_Vehicles[i_RegistrationNumber].VehicleStatus.ToString());
+            r_Vehicles[i_RegistrationNumber].Vehicle.GetDetails(i_Details);
+            r_Vehicles[i_RegistrationNumber].Owner.GetDetails(i_Details);
+            i_Details.Add(VehicleInGarage.k_VehicleStatus, r_Vehicles[i_RegistrationNumber].VehicleStatus.ToString());
         }
 
         // InflateVehicleWheels: inflates the wheels of a vehicle to their maximum amount of air.
         public void InflateVehicleWheels(string i_RegistrationNumber)
         {
-            m_Vehicles[i_RegistrationNumber].Vehicle.InflateWheels();
+            r_Vehicles[i_RegistrationNumber].Vehicle.InflateWheels();
         }
 
         // IsVehicleExistsInGarage: return True if the vehicle is in garage, False else.
         public bool IsVehicleExistsInGarage(string i_RegistrationNumber)
         {
-            return m_Vehicles.ContainsKey(i_RegistrationNumber);
+            return r_Vehicles.ContainsKey(i_RegistrationNumber);
         }
 
         // getRegistrationNumbers: gets all the vehicle's registration numbers who fits the input vehicle status.
         private List<string> getRegistrationNumbers(eVehicleFilter i_Filter, eVehicleStatus i_Status)
         {
             List<string> result = new List<string>();
-            foreach (string registration in m_Vehicles.Keys)
+            foreach (string registration in r_Vehicles.Keys)
             {
                 if ((i_Filter == eVehicleFilter.All)
-                    || (i_Filter == eVehicleFilter.ByStatus && m_Vehicles[registration].VehicleStatus == i_Status))
+                    || (i_Filter == eVehicleFilter.ByStatus && r_Vehicles[registration].VehicleStatus == i_Status))
                 {
                     result.Add(registration);
                 }

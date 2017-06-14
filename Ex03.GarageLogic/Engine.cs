@@ -16,7 +16,7 @@
 
         private const float k_MinEnergy = 0;
 
-        private readonly float m_MaxEnergy;
+        private readonly float r_MaxEnergy;
 
         private float m_CurrentEnergy;
 
@@ -25,7 +25,7 @@
         protected Engine(float i_MaxEnergy, eEngineType i_EngineType)
         {
             m_EngineType = i_EngineType;
-            m_MaxEnergy = i_MaxEnergy;
+            r_MaxEnergy = i_MaxEnergy;
             m_CurrentEnergy = 0;
         }
 
@@ -71,7 +71,7 @@
         {
             get
             {
-                return m_MaxEnergy;
+                return r_MaxEnergy;
             }
         }
 
@@ -109,7 +109,7 @@
         {
             i_Details.Add(k_EngineType, m_EngineType.ToString());
             i_Details.Add(k_CurrentEnergy, m_CurrentEnergy.ToString());
-            i_Details.Add(k_MaxEnergy, m_MaxEnergy.ToString());
+            i_Details.Add(k_MaxEnergy, r_MaxEnergy.ToString());
         }
 
         // SetProperties: sets all the properties that were inserted by user.
