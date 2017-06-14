@@ -1,0 +1,10 @@
+==========================Exercise Checking Report==========================
+Exercise No...........: 3
+First Student Details.: 201389681- Dor Grinshpan
+Second Student Details: 307948836- Idan Goor
+Delivery Date.........: 14 - June - 2017
+Delivered In Delay....: Yes.
+Delay Reason..........: Miluim.
+Visual Studio Version.: 2015
+Comments..............: Delay approved by Guy Ronen.
+========================End Exercise Checking Report========================
