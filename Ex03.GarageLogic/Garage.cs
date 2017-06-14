@@ -137,7 +137,7 @@ namespace Ex03.GarageLogic
         }
 
         // GetVehicleDetails: gets all the details about a vehicle & owner properties.
-        public void GetVehicleDetails(string i_RegistrationNumber, Dictionary<string,string> i_Details)
+        public void GetVehicleDetails(string i_RegistrationNumber, Dictionary<string, string> i_Details)
         {
             m_Vehicles[i_RegistrationNumber].Vehicle.GetDetails(i_Details);
             m_Vehicles[i_RegistrationNumber].Owner.GetDetails(i_Details);

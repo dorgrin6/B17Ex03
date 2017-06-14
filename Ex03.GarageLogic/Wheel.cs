@@ -85,7 +85,7 @@ namespace Ex03.GarageLogic
         }
 
         // GetDetails: gets all the details about this object properties.
-        //NOTE: pay attention that the method gets also the wheel's index in it's vehicle.
+        // NOTE: pay attention that the method gets also the wheel's index in it's vehicle.
         public void GetDetails(Dictionary<string, string> i_Details, int i_WheelIndex)
         {
             StringBuilder wheelNumberAndProperty = new StringBuilder();

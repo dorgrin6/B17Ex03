@@ -7,13 +7,13 @@ namespace Ex03.GarageLogic
     {
         private Type m_ValueType;
 
-        private List<string> m_OptionalEnumValues; //holds the type of values property can holds if it is an Enum.
+        private List<string> m_OptionalEnumValues; // holds the type of values property can holds if it is an Enum.
 
-        private float m_MaxBound; //holds the maximum value if the property's value is ranged.
+        private float m_MaxBound; // holds the maximum value if the property's value is ranged.
 
-        private float m_MinBound; //holds the minimum value if the property's value is ranged.
+        private float m_MinBound; // holds the minimum value if the property's value is ranged.
 
-        private bool m_IsFloatRanged; //holds True if property's value is ranged, False else.
+        private bool m_IsFloatRanged; // holds True if property's value is ranged, False else.
 
         public PropertyHolder(Type i_ValueType)
         {

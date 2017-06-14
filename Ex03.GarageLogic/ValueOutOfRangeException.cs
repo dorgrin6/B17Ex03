@@ -24,7 +24,7 @@ namespace Ex03.GarageLogic
         }
 
         public ValueOutOfRangeException(float i_MinValue, float i_MaxValue, string i_ValueName) 
-            : base(String.Format("{0} should be between {1} and {2}.",i_ValueName, i_MinValue,i_MaxValue))
+            : base(String.Format("{0} should be between {1} and {2}.", i_ValueName, i_MinValue, i_MaxValue))
         {
             m_MinValue = i_MinValue;
             m_MaxValue = i_MaxValue;

@@ -72,7 +72,7 @@ namespace Ex03.GarageLogic
         public override void SetProperties(Dictionary<string, string> i_Properties)
         {
             base.SetProperties(i_Properties);
-            Color = (eColor)Enum.Parse(typeof(eColor),i_Properties[k_Color]);
+            Color = (eColor)Enum.Parse(typeof(eColor), i_Properties[k_Color]);
             DoorsAmount = (eDoorsAmount)Enum.Parse(typeof(eDoorsAmount), i_Properties[k_DoorsAmount]);
         }
 

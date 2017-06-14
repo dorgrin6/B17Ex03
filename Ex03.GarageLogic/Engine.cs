@@ -15,7 +15,7 @@ namespace Ex03.GarageLogic
 
         public const string k_WrongFuel = "Type of fuel / charge is not suitable with the vehicle's engine type.";
 
-        private readonly float r_MaxEnergy;
+        private readonly float m_MaxEnergy;
 
         private const float k_MinEnergy = 0;
 
@@ -32,7 +32,7 @@ namespace Ex03.GarageLogic
         protected Engine(float i_MaxEnergy, eEngineType i_EngineType)
         {
             m_EngineType = i_EngineType;
-            r_MaxEnergy = i_MaxEnergy;
+            m_MaxEnergy = i_MaxEnergy;
             m_CurrentEnergy = 0;
         }
 
@@ -58,7 +58,7 @@ namespace Ex03.GarageLogic
         {
             get
             {
-                return r_MaxEnergy;
+                return m_MaxEnergy;
             }
         }
 
@@ -100,7 +100,7 @@ namespace Ex03.GarageLogic
         {
             i_Details.Add(k_EngineType, m_EngineType.ToString());
             i_Details.Add(k_CurrentEnergy, m_CurrentEnergy.ToString());
-            i_Details.Add(k_MaxEnergy, r_MaxEnergy.ToString());
+            i_Details.Add(k_MaxEnergy, m_MaxEnergy.ToString());
         }
 
         // ChargeEnergy: charges the engine's energy. gets params as input: Engine type, Amount to charge, Type of fuel.
